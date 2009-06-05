@@ -160,7 +160,7 @@ clean_line(){
 
 #add text on current window
 append(){
-    text=$(echo $1 | fold -w $LASTCOLS -s)
+    text=$(echo $1 | fold -w $((LASTCOLS-2)) -s)
     rbuffer="/dev/shm/scursesbuffer."$RANDOM
     echo  -e "$text" > $rbuffer
     while read a; do
