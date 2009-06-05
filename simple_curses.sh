@@ -7,7 +7,7 @@
 
 #Usefull variables
 LASTCOLS=0
-BUFFER="/tmp/deskbar.buffer"$RANDOM
+BUFFER="/dev/shm/deskbar.buffer"$RANDOM
 POSX=0
 POSY=0
 LASTWINPOS=0
@@ -53,6 +53,29 @@ set_position(){
     POSY=$2
 }
 
+#initialize chars to use
+_TL="\033(0l\033(B"
+_TR="\033(0k\033(B"
+_BL="\033(0m\033(B"
+_BR="\033(0j\033(B"
+_SEPL="\033(0t\033(B"
+_SEPR="\033(0u\033(B"
+_VLINE="\033(0x\033(B"
+_HLINE="\033(0q\033(B"
+init_chars(){    
+    if [[ "$ASCIIMODE" != "" ]]; then
+        if [[ "$ASCIIMODE" == "ascii" ]]; then
+            _TL="+"
+            _TR="+"
+            _BL="+"
+            _BR="+"
+            _SEPL="+"
+            _SEPR="+"
+            _VLINE="|"
+            _HLINE="-"
+        fi
+    fi
+}
 
 #Append a windo on POSX,POSY
 window(){
@@ -76,15 +99,15 @@ window(){
 
     #draw up line
     clean_line
-    echo -ne "\033(0l\033(B"
-    for i in `seq 3 $cols`; do echo -ne "\033(0q\033(B"; done
-    echo -ne "\033(0k\033(B"
+    echo -ne $_TL
+    for i in `seq 3 $cols`; do echo -ne $_HLINE; done
+    echo -ne $_TR
     #next line, draw title
     _nl
 
     tput sc
     clean_line
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     tput cuf $left
     #set title color
     case $color in
@@ -106,7 +129,7 @@ window(){
     echo $title
     tput rc
     tput cuf $((cols-1))
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     echo -n -e "\e[00m"
     _nl
     #then draw bottom line for title
@@ -119,9 +142,9 @@ window(){
 #append a separator, new line
 addsep (){
     clean_line
-    echo -ne "\033(0t\033(B"
-    for i in `seq 3 $cols`; do echo -ne "\033(0q\033(B"; done
-    echo -ne "\033(0u\033(B"
+    echo -ne $_SEPL
+    for i in `seq 3 $cols`; do echo -ne $_HLINE; done
+    echo -ne $_SEPR
     _nl
 }
 
@@ -138,7 +161,7 @@ clean_line(){
 #add text on current window
 append(){
     text=$(echo $1 | fold -w $LASTCOLS -s)
-    rbuffer="/tmp/scursesbuffer."$RANDOM
+    rbuffer="/dev/shm/scursesbuffer."$RANDOM
     echo  -e "$text" > $rbuffer
     while read a; do
         _append "$a"
@@ -148,7 +171,7 @@ append(){
 _append(){
     clean_line
     tput sc
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     len=$(echo "$1" | wc -c )
     len=$((len-1))
     left=$((LASTCOLS/2 - len/2 -1))
@@ -156,7 +179,7 @@ _append(){
     echo $1
     tput rc
     tput cuf $((LASTCOLS-1))
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     _nl
 }
 
@@ -165,7 +188,7 @@ append_tabbed(){
     [[ "$3" != "" ]] && delim=$3 || delim=":"
     clean_line
     tput sc
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     len=$(echo "$1" | wc -c )
     len=$((len-1))
     left=$((LASTCOLS/$2)) 
@@ -176,16 +199,16 @@ append_tabbed(){
     done
     tput rc
     tput cuf $((LASTCOLS-1))
-    echo -ne "\033(0x\033(B"
+    echo -ne $_VLINE
     _nl
 }
 
 #close the window display
 endwin(){
     clean_line
-    echo -ne "\033(0m\033(B"
-    for i in `seq 3 $LASTCOLS`; do echo -ne "\033(0q\033(B"; done
-    echo -ne "\033(0j\033(B"
+    echo -ne $_BL
+    for i in `seq 3 $LASTCOLS`; do echo -ne $_HLINE; done
+    echo -ne $_BR
     _nl
 }
 
@@ -200,6 +223,7 @@ refresh (){
 #main loop called
 main_loop (){
     term_init
+    init_chars
     [[ "$1" == "" ]] && time=1 || time=$1
     while [[ 1 ]];do
         tput cup 0 0 >> $BUFFER
