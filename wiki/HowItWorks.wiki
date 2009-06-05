@@ -30,9 +30,13 @@ echo -e "\033[32mText in red\033[0m"
 }}}
 
 This display text in red color.
-== buffer ==
+== Buffer ==
 
-Bash has no STDOUT buffer. But Bash is powerfull I said ! If you change colors, write texts, and you redirect to a file, Bash insert special caracters to set colors while you use "cat" command.
+Tput command is a bit low... Refreshing view is not pretty while the cursors is moving on screen. A "clipping" appears. That's why Bash simple curses needs a STDOUT buffer that is not display until we explicitally ask to flush display.
+
+But... Bash has no STDOUT buffer... 
+
+*But Bash is powerfull I said !* If you change colors, write texts, and you redirect to a file, Bash insert special caracters to set colors while you use "cat" command.
 
 Bash simple curses execute every "echo" command redirected to /tmp/bashbar.buffer
 
