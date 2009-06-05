@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary The basic tutorial
 
 = Basic Introduction =
 
