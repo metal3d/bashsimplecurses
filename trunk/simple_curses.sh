@@ -10,6 +10,7 @@ LASTCOLS=0
 BUFFER="/tmp/deskbar.buffer"$RANDOM
 POSX=0
 POSY=0
+LASTWINPOS=0
 
 #call on SIGINT and SIGKILL
 #it removes buffer before to stop
@@ -37,6 +38,15 @@ _nl(){
 }
 
 
+move_up(){
+    set_position $POSX 0
+}
+
+col_right(){
+    left=$((LASTCOLS+POSX))
+    set_position $left $LASTWINPOS
+}
+
 #put display coordinates
 set_position(){
     POSX=$1
@@ -46,12 +56,20 @@ set_position(){
 
 #Append a windo on POSX,POSY
 window(){
+    LASTWINPOS=$POSY
     title=$1
     color=$2      
-    tput cup $POSY $POSX >> $BUFFER
+    tput cup $POSY $POSX 
     cols=$(tput cols)
+    cols=$((cols))
     if [[ "$3" != "" ]]; then
-        cols=$(($3))
+        cols=$3
+        if [ $(echo $3 | grep "%") ];then
+            cols=$(tput cols)
+            cols=$((cols))
+            w=$(echo $3 | sed 's/%//')
+            cols=$((w*cols/100))
+        fi
     fi
     len=$(echo "$1" | echo $(($(wc -c)-1)))
     left=$(((cols/2) - (len/2) -1))
@@ -77,10 +95,10 @@ window(){
             echo -n -e "\E[01;31m"
             ;;
         blue)
-            echo -n -e "\E[01;37m"
+            echo -n -e "\E[01;34m"
             ;;
         grey|*)
-            echo -n -e "\E[01;34m"
+            echo -n -e "\E[01;37m"
             ;;
     esac
     
@@ -100,6 +118,7 @@ window(){
 
 #append a separator, new line
 addsep (){
+    clean_line
     echo -ne "\033(0t\033(B"
     for i in `seq 3 $cols`; do echo -ne "\033(0q\033(B"; done
     echo -ne "\033(0u\033(B"
@@ -110,12 +129,23 @@ addsep (){
 #clean the current line
 clean_line(){
     tput sc
-    tput el
+    #tput el
     tput rc
+    
 }
+
 
 #add text on current window
 append(){
+    text=$(echo $1 | fold -w $LASTCOLS -s)
+    rbuffer="/tmp/scursesbuffer."$RANDOM
+    echo  -e "$text" > $rbuffer
+    while read a; do
+        _append "$a"
+    done < $rbuffer
+    rm -f $rbuffer
+}
+_append(){
     clean_line
     tput sc
     echo -ne "\033(0x\033(B"
@@ -152,6 +182,7 @@ append_tabbed(){
 
 #close the window display
 endwin(){
+    clean_line
     echo -ne "\033(0m\033(B"
     for i in `seq 3 $LASTCOLS`; do echo -ne "\033(0q\033(B"; done
     echo -ne "\033(0j\033(B"
@@ -171,12 +202,13 @@ main_loop (){
     term_init
     [[ "$1" == "" ]] && time=1 || time=$1
     while [[ 1 ]];do
-        main >> $BUFFER
-        tput ed >> $BUFFER
+        tput cup 0 0 >> $BUFFER
+        tput il $(tput lines) >>$BUFFER
+        main >> $BUFFER 
+        tput cup $(tput lines) $(tput cols) >> $BUFFER 
         refresh
         sleep $time
         POSX=0
         POSY=0
-        tput cup 0 0 >> $BUFFER
     done
 }
