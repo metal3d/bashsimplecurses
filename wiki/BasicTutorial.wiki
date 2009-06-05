@@ -55,6 +55,8 @@ Now, you can try:
 
 And a window appear ! To close your script, you only have to kill or press CTRL+C
 
+[http://www.metal3d.org/captures/bashsimplecurses/tuto1.png]
+
 == Title Colors ==
 
 You can specify colors for titles, change line on tutorial like this:
@@ -64,6 +66,8 @@ You can specify colors for titles, change line on tutorial like this:
 }}}
 
 Restart your script, and the title is red.
+
+[http://www.metal3d.org/captures/bashsimplecurses/tuto2.png]
 
 For now, only 4 colors are implented:
    * red
