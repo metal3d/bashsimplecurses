@@ -1,29 +1,57 @@
 #!/bin/bash
+#simple curses library to create windows on terminal
+#
+#author: Patrice Ferlet metal3d@copix.org
+#licence: new BSD
 
+
+#Usefull variables
 LASTCOLS=0
-BUFFER="/tmp/deskbar.buffer"
+BUFFER="/tmp/deskbar.buffer"$RANDOM
+POSX=0
+POSY=0
 
-
+#call on SIGINT and SIGKILL
+#it removes buffer before to stop
 on_kill(){
-    echo "Closing bashbar..."
+    echo "Exiting"
     rm -rf $BUFFER
     exit 0
 }
 trap on_kill SIGINT SIGTERM
 
 
+#initialize terminal
 term_init(){
+    POSX=0
+    POSY=0
     tput clear >> $BUFFER
-    tput cup 0 0 >> $BUFFER
 }
 
+
+#change line
+_nl(){
+    POSY=$((POSY+1))
+    tput cup $POSY $POSX >> $BUFFER
+    #echo 
+}
+
+
+#put display coordinates
+set_position(){
+    POSX=$1
+    POSY=$2
+}
+
+
+#Append a windo on POSX,POSY
 window(){
     title=$1
     color=$2      
-
+    tput cup $POSY $POSX >> $BUFFER
     cols=$(tput cols)
     if [[ "$3" != "" ]]; then
-        cols=$3
+        cols=$(($3))
     fi
     len=$(echo "$1" | echo $(($(wc -c)-1)))
     left=$(((cols/2) - (len/2) -1))
@@ -34,11 +62,13 @@ window(){
     for i in `seq 3 $cols`; do echo -ne "\033(0q\033(B"; done
     echo -ne "\033(0k\033(B"
     #next line, draw title
-    echo 
+    _nl
+
     tput sc
     clean_line
     echo -ne "\033(0x\033(B"
     tput cuf $left
+    #set title color
     case $color in
         green)
             echo -n -e "\E[01;32m"
@@ -46,10 +76,10 @@ window(){
         red)
             echo -n -e "\E[01;31m"
             ;;
-        grey)
+        blue)
             echo -n -e "\E[01;37m"
             ;;
-        blue)
+        grey|*)
             echo -n -e "\E[01;34m"
             ;;
     esac
@@ -57,29 +87,34 @@ window(){
     
     echo $title
     tput rc
-    tput cuf $cols
+    tput cuf $((cols-1))
     echo -ne "\033(0x\033(B"
     echo -n -e "\e[00m"
-    echo
+    _nl
     #then draw bottom line for title
     addsep
-    #reset color
+    
     LASTCOLS=$cols
 
 }
 
+#append a separator, new line
 addsep (){
     echo -ne "\033(0t\033(B"
     for i in `seq 3 $cols`; do echo -ne "\033(0q\033(B"; done
     echo -ne "\033(0u\033(B"
-    echo
+    _nl
 }
 
+
+#clean the current line
 clean_line(){
     tput sc
     tput el
     tput rc
 }
+
+#add text on current window
 append(){
     clean_line
     tput sc
@@ -92,9 +127,10 @@ append(){
     tput rc
     tput cuf $((LASTCOLS-1))
     echo -ne "\033(0x\033(B"
-    echo
+    _nl
 }
 
+#add separated values on current window
 append_tabbed(){
     [[ "$3" != "" ]] && delim=$3 || delim=":"
     clean_line
@@ -111,17 +147,18 @@ append_tabbed(){
     tput rc
     tput cuf $((LASTCOLS-1))
     echo -ne "\033(0x\033(B"
-    echo
-
+    _nl
 }
 
+#close the window display
 endwin(){
     echo -ne "\033(0m\033(B"
     for i in `seq 3 $LASTCOLS`; do echo -ne "\033(0q\033(B"; done
     echo -ne "\033(0j\033(B"
-    echo
+    _nl
 }
 
+#refresh display
 refresh (){
     cat $BUFFER
     echo "" > $BUFFER
@@ -129,7 +166,7 @@ refresh (){
 
 
 
-
+#main loop called
 main_loop (){
     term_init
     [[ "$1" == "" ]] && time=1 || time=$1
@@ -138,6 +175,8 @@ main_loop (){
         tput ed >> $BUFFER
         refresh
         sleep $time
+        POSX=0
+        POSY=0
         tput cup 0 0 >> $BUFFER
     done
 }
