@@ -159,12 +159,17 @@ clean_line(){
 
 
 #add text on current window
+append_file(){
+    while read l;do
+        _append "$l" "left"
+    done < "$1"
+}
 append(){
-    text=$(echo $1 | fold -w $((LASTCOLS-2)) -s)
+    text=$(echo -e $1 | fold -w $((LASTCOLS-2)) -s)
     rbuffer="/dev/shm/scursesbuffer."$RANDOM
     echo  -e "$text" > $rbuffer
     while read a; do
-        _append "$a"
+        _append "$a" $2
     done < $rbuffer
     rm -f $rbuffer
 }
@@ -175,8 +180,11 @@ _append(){
     len=$(echo "$1" | wc -c )
     len=$((len-1))
     left=$((LASTCOLS/2 - len/2 -1))
+    
+    [[ "$2" == "left" ]] && left=0
+
     tput cuf $left
-    echo $1
+    echo -e $1
     tput rc
     tput cuf $((LASTCOLS-1))
     echo -ne $_VLINE
