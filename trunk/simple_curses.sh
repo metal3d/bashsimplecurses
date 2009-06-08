@@ -16,9 +16,11 @@ create_buffer(){
     BUFFER_DIR="/tmp"
   fi
 
+  [[ "$1" != "" ]] &&  buffername=$1 || buffername="bashsimplecurses"
+
   # Try to use mktemp before using the unsafe method
   if [ -x `which mktemp` ]; then
-    mktemp --tmpdir=${BUFFER_DIR} bashsimplecurses.XXXXXXXXXX
+    mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
   else
     echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
   fi
@@ -228,6 +230,14 @@ append_tabbed(){
     tput cuf $((LASTCOLS-1))
     echo -ne $_VLINE
     _nl
+}
+
+#append a command output
+append_command(){
+    buff=`create_buffer command`
+    echo -e "`$1`" > $buff 2>&1
+    append_file $buff
+    rm -f $buff
 }
 
 #close the window display
