@@ -2,12 +2,31 @@
 #simple curses library to create windows on terminal
 #
 #author: Patrice Ferlet metal3d@copix.org
-#licence: new BSD
+#license: new BSD
+#
+#create_buffer patch by Laurent Bachelier
 
+create_buffer(){
+  # Try to use SHM, then $TMPDIR, then /tmp
+  if [ -d "/dev/shm" ]; then
+    BUFFER_DIR="/dev/shm"
+  elif [ -z $TMPDIR ]; then
+    BUFFER_DIR=$TMPDIR
+  else
+    BUFFER_DIR="/tmp"
+  fi
+
+  # Try to use mktemp before using the unsafe method
+  if [ -x `which mktemp` ]; then
+    mktemp --tmpdir=${BUFFER_DIR} bashsimplecurses.XXXXXXXXXX
+  else
+    echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
+  fi
+}
 
 #Usefull variables
 LASTCOLS=0
-BUFFER="/dev/shm/deskbar.buffer"$RANDOM
+BUFFER=`create_buffer`
 POSX=0
 POSY=0
 LASTWINPOS=0
