@@ -1,11 +1,16 @@
 #!/bin/bash
 
 source $(dirname $0)/simple_curses.sh
-
 main(){
     window "Test 1" "red" "33%"
     append "First simple window"
+    addsep
+    append_command "cal -m"
     endwin
+
+    window "Tree files" "gree" "33%"
+    append_command "tree -L 2 -C -A ./"
+    endwin 
 
     col_right 
     move_up
@@ -27,7 +32,7 @@ main(){
     col_right 
     move_up
     window "Test 5" "red" "34%"
-    append "We can add some little windows... rememeber that very long lines are wrapped to fit window !"
+    append "We can add some little windows... rememeber that very long lines are wrapped to fit window !" "left"
     endwin
 
     window "Little" "green" "12%"
