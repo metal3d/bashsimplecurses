@@ -216,6 +216,7 @@ _append(){
 
 #add separated values on current window
 append_tabbed(){
+    [[ $2 == "" ]] && echo "append_tabbed: Second argument needed" >&2 && exit 1
     [[ "$3" != "" ]] && delim=$3 || delim=":"
     clean_line
     tput sc
