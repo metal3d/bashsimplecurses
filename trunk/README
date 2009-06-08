@@ -1,0 +1,5 @@
+"Bash simple curses" give you some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
+
+An example is given: bashbar. Bashbar is a monitoring bar that you can integrate in tiling desktop (Xmonad, WMii...)
+
+The goal of Bash Simple Curses is not done (not yet) to create very complete windows. It is only done to create some colored windows and display informations into.
