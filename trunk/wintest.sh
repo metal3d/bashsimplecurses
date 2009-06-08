@@ -28,6 +28,16 @@ main(){
     append "`date`"
     append "I only ask for date"
     endwin
+
+    window "Let's play with libcaca" "green" "33%"
+    command="img2txt tux.gif -y 12 -W 45 -d ordered2 -f utf8"
+    append "$command"
+    if [[ -x `which img2txt` ]]; then
+        append_command "$command"
+    else
+        append "You should install caca-utils"
+    fi
+    endwin
     
     col_right 
     move_up
@@ -48,6 +58,7 @@ main(){
     window "Other window" "blue" "22%"
     append "And this is\nanother little window"
     endwin
+
 
 }
 main_loop
