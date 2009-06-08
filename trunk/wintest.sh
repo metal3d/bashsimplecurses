@@ -35,6 +35,12 @@ main(){
     append "We can add some little windows... rememeber that very long lines are wrapped to fit window !" "left"
     endwin
 
+    window "Tabbed values" "red" "34%"
+    append_tabbed "colomn1:column2:column3" 3
+    append_tabbed "val 1:val 2:val 3" 3
+    append_tabbed "val 4:val 5:val 6" 3
+    endwin
+   
     window "Little" "green" "12%"
     append "this is a simple\nlittle window"
     endwin
