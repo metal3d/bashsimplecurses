@@ -181,8 +181,9 @@ clean_line(){
 
 #add text on current window
 append_file(){
+    [[ "$1" != "" ]] && align="left" || align=$1
     while read l;do
-        _append "$l" "left"
+        _append "$l" $align
     done < "$1"
 }
 append(){
@@ -205,7 +206,7 @@ _append(){
     [[ "$2" == "left" ]] && left=0
 
     tput cuf $left
-    echo -e $1
+    echo -e "$1"
     tput rc
     tput cuf $((LASTCOLS-1))
     echo -ne $_VLINE
@@ -236,7 +237,7 @@ append_tabbed(){
 append_command(){
     buff=`create_buffer command`
     echo -e "`$1`" > $buff 2>&1
-    append_file $buff
+    append_file $buff "no"
     rm -f $buff
 }
 
