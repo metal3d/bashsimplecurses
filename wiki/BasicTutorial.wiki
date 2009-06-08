@@ -16,7 +16,7 @@ mkdir -p ~/tutorial/bashcurses
 Get bashsimplecurses sources on SVN.
 {{{
 cd ~/tutorial/bashcurses
-svn checkout https://bashsimplecurses.googlecode.com/svn/trunk/ bashsimplecurses
+svn checkout http://bashsimplecurses.googlecode.com/svn/trunk/ bashsimplecurses
 }}}
 
 Now, create a tutorial.sh script and edit it, you can use vim, gedit, nano...:
