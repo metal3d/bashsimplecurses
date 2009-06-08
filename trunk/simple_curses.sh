@@ -183,12 +183,13 @@ clean_line(){
 append_file(){
     [[ "$1" != "" ]] && align="left" || align=$1
     while read l;do
+        l=`echo $l | sed 's/____SPACES____/ /g'`
         _append "$l" $align
     done < "$1"
 }
 append(){
     text=$(echo -e $1 | fold -w $((LASTCOLS-2)) -s)
-    rbuffer="/dev/shm/scursesbuffer."$RANDOM
+    rbuffer=`create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
     while read a; do
         _append "$a" $2
@@ -236,8 +237,8 @@ append_tabbed(){
 #append a command output
 append_command(){
     buff=`create_buffer command`
-    echo -e "`$1`" > $buff 2>&1
-    append_file $buff "no"
+    echo -e "`$1`" | sed 's/ /____SPACES____/g' > $buff 2>&1
+    append_file $buff "left"
     rm -f $buff
 }
 
