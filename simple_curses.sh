@@ -20,7 +20,8 @@ create_buffer(){
 
   # Try to use mktemp before using the unsafe method
   if [ -x `which mktemp` ]; then
-    mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
+    #mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
+    mktemp ${BUFFER_DIR}/${buffername}.XXXXXXXXXX
   else
     echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
   fi
