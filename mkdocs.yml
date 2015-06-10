@@ -1,0 +1,6 @@
+site_name: Bash simple curses
+theme: readthedocs
+pages:
+- [index.md]
+- [BasicTutorial.md, "Tutorial"]
+- [HowItWorks.md, "How does it works"]
