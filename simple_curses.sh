@@ -37,7 +37,9 @@ LASTWINPOS=0
 #call on SIGINT and SIGKILL
 #it removes buffer before to stop
 on_kill(){
-    echo "Exiting"
+    tput cup 0 0 >> $BUFFER
+    # Erase in-buffer
+    tput ed >> $BUFFER
     rm -rf $BUFFER
     exit 0
 }
