@@ -84,7 +84,9 @@ _SEPL="\033(0t\033(B"
 _SEPR="\033(0u\033(B"
 _VLINE="\033(0x\033(B"
 _HLINE="\033(0q\033(B"
-init_chars(){    
+
+init_chars(){
+    if [[ -z "$ASCIIMODE" && $LANG =~ ".*\.UTF-8" ]] ; then ASCIIMODE=utf8; fi
     if [[ "$ASCIIMODE" != "" ]]; then
         if [[ "$ASCIIMODE" == "ascii" ]]; then
             _TL="+"
@@ -96,8 +98,19 @@ init_chars(){
             _VLINE="|"
             _HLINE="-"
         fi
+        if [[ "$ASCIIMODE" == "utf8" ]]; then
+            _TL="\xE2\x94\x8C"
+            _TR="\xE2\x94\x90"
+            _BL="\xE2\x94\x94"
+            _BR="\xE2\x94\x98"
+            _SEPL="\xE2\x94\x9C"
+            _SEPR="\xE2\x94\xA4"
+            _VLINE="\xE2\x94\x82"
+            _HLINE="\xE2\x94\x80"
+        fi
     fi
 }
+
 
 #Append a windo on POSX,POSY
 window(){
