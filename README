@@ -6,6 +6,8 @@ The goal of Bash Simple Curses is not done (not yet) to create very complete win
 
 To use library, you have to import library "simple_curses.sh" into you bash script:
 
+```bash
+
 #!/bin/bash
 
 #import library, please check path
@@ -22,10 +24,10 @@ main (){
 
 #then, you can execute loop:
 main_loop 1
+```
 
 That's all... 
 
 Go into the project to have documentation about functions: 
-http://bashsimplecurses.googlecode.com
-
+https://github.com/metal3d/bashsimplecurses
 
