@@ -27,7 +27,7 @@ uninstall:
 
 test:
 	@echo "Check if img2txt is installed"
-	which idddmg2txt > /dev/null && echo -e "\033[32mOk\033[0m - you can use img2txt command to display images on window" || echo -e "\033[33mWarning\033[0m - You should install caca-utils or img2txt command"
+	which img2txt > /dev/null && echo -e "\033[32mOk\033[0m - you can use img2txt command to display images on window" || echo -e "\033[33mWarning\033[0m - You should install caca-utils or img2txt command"
 
 dist:
 	mkdir ./bashsimplecurses-$(VERSION)
