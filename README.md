@@ -1,3 +1,9 @@
+
+#Bash Simple Curses
+
+[![Documentation Status](https://readthedocs.org/projects/bashsimplecurses/badge/?version=latest)](https://readthedocs.org/projects/bashsimplecurses/?badge=latest)
+                
+
 "Bash simple curses" give you some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
 
 An example is given: bashbar. Bashbar is a monitoring bar that you can integrate in tiling desktop (Xmonad, WMii...)
