@@ -5,10 +5,6 @@ An example is given: bashbar. Bashbar is a monitoring bar that you can integrate
 
 The goal of Bash Simple Curses is not done (not yet) to create very complete windows. It is only done to create some colored windows and display informations into.
 
-You are using Bash simple curses ? Please Click on following button !
-
-&lt;wiki:gadget url="http://www.ohloh.net/p/346120/widgets/project\_users.xml?style=green" height="100"  border="0" /&gt;
-
 # Why ? #
 
 Because bash is very usefull, there are command to do whatever you want. With curses you can create a little bar to display informations every second, you can change an output command to display a report...
