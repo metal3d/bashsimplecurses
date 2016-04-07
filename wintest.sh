@@ -9,7 +9,7 @@ main(){
 		endwin
 
 		window "Tree files" "gree" "33%"
-		if [[ -x `which tree` ]]; then
+		if [[ -x `which tree 2> /dev/null` ]]; then
 			append_command "tree -L 2 -C -A ./"
 		else
 			append "Please install tree command"
@@ -37,7 +37,7 @@ main(){
 	window "Let's play with libcaca" "green" "33%"
 		command="img2txt tux.gif -y 12 -W 45 -d ordered2 -f utf8"
 		append "$command"
-		if [[ -x `which img2txt` ]]; then
+		if [[ -x `which img2txt 2> /dev/null` ]]; then
 			append_command "$command"
 		else
 			append "You should install caca-utils"
