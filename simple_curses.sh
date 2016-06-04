@@ -88,7 +88,7 @@ _VLINE="\033(0x\033(B"
 _HLINE="\033(0q\033(B"
 
 init_chars(){
-    if [[ -z "$ASCIIMODE" && $LANG =~ ".*\.UTF-8" ]] ; then ASCIIMODE=utf8; fi
+    if [[ -z "$ASCIIMODE" && $LANG =~ .*\.UTF-8 ]] ; then ASCIIMODE=utf8; fi
     if [[ "$ASCIIMODE" != "" ]]; then
         if [[ "$ASCIIMODE" == "ascii" ]]; then
             _TL="+"
