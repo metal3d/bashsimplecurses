@@ -1,24 +1,26 @@
 # The simple way #
-"Bash simple curses" give you some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
 
-An example is given: bashbar. Bashbar is a monitoring bar that you can integrate in tiling desktop (Xmonad, WMii...)
+"Bash simple curses" provides some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
 
-The goal of Bash Simple Curses is not done (not yet) to create very complete windows. It is only done to create some colored windows and display informations into.
+An example is given: bashbar that is a monitoring bar you can integrate in tiling desktop (Xmonad, WMii...).
+
+The goal of Bash Simple Curses is not creating very complete windows. It is only made to create some colored windows and display informations into.
 
 # Why ? #
 
-Because bash is very usefull, there are command to do whatever you want. With curses you can create a little bar to display informations every second, you can change an output command to display a report...
+Bash is very comple and has a great ecosystem, there are commands to do whatever you want. With curses you can create a little bar to display informations each second, you can change an output command to display a report...
 
-So, we need an easy and usefull library to quickly create this kind of views. This is why you can try Bash Simple Curses
+So, we need an easy and usefull library to quickly create this kind of views. This is why you can try Bash Simple Curses.
 
 # Example: the bashbar #
+
 Bash bar is the given example that show system informations. You only have to resize your terminal window and place it on left or right. This screenshot is made on Xmonad:
 
 ![http://www.metal3d.org/captures/bashsimplecurses/bashbar.png](http://www.metal3d.org/captures/bashsimplecurses/bashbar.png)
 
-this is the code used:
+It's implemented this way:
 
-```
+```bash
 #!/bin/bash
 
 . `dirname $0`/simple_curses.sh
@@ -68,7 +70,8 @@ this capture shows you that you can do whatever you want:
 ![http://www.metal3d.org/captures/bashsimplecurses/bashcurses.png](http://www.metal3d.org/captures/bashsimplecurses/bashcurses.png)
 
 Code is:
-```
+
+```bash
 #!/bin/bash
 
 source $(dirname $0)/simple_curses.sh
@@ -113,7 +116,7 @@ main(){
 main_loop
 ```
 
-# How nice ! #
+# Some other cool stuffs #
 
 And just with libcaca "img2txt" command, you can have fun:
 

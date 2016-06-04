@@ -1,31 +1,36 @@
 # Basic Introduction #
 
-Bash simple curses is a very simple system to create "bash windows" and append texts into. You only have to know some functions and what to show.
+Bash simple curses is a very simple bash library to create "bash windows" and append texts into. 
+You only have to know some functions and what to show.
 
 Let's take a look on this little tutorial
 
 # Importing bash functions #
 
 Create a directory where we will work. For example
-```
+
+```bash
 mkdir -p ~/tutorial/bashcurses
 ```
 
 Get bashsimplecurses sources from github.
-```
+
+```bash
 cd ~/tutorial/bashcurses
 git clone git@github.com:metal3d/bashsimplecurses.git
 ```
 
 Now, create a tutorial.sh script and edit it, you can use vim, gedit, nano...:
-```
+
+```bash
 touch tutorial.sh
 #vim tutorial.sh
 #or nano tutorial.sh
 ```
 
-It's ok, then you can add this into your code:
-```
+It's ok, then you can add this:
+
+```bash
 #!/bin/bash
 
 #import bashsimplecurses
@@ -41,8 +46,9 @@ main(){
 main_loop
 ```
 
-It's ok ? save your work. Now, you only have to set this script "executable"
-```
+Save your work. Now, you only have to set this script "executable"
+
+```bash
 chmod +x ~/tutorial/bashcurses/tutorial.sh
 ```
 
@@ -51,13 +57,14 @@ Now, you can try:
 ~/tutorial/bashcurses/tutorial.sh
 ```
 
-And a window appear ! To close your script, you only have to kill or press CTRL+C
+And a window appeaars ! To close your script, you only have to kill or press CTRL+C
 
 ![http://www.metal3d.org/captures/bashsimplecurses/tuto1.png](http://www.metal3d.org/captures/bashsimplecurses/tuto1.png)
 
 ## Title Colors ##
 
-You can specify colors for titles, change line on tutorial like this:
+You can specify colors for titles. For example, change line on tutorial like this:
+
 ```
 ...
    window "Title of my window" "red"
@@ -67,18 +74,21 @@ Restart your script, and the title is red.
 
 ![http://www.metal3d.org/captures/bashsimplecurses/tuto2.png](http://www.metal3d.org/captures/bashsimplecurses/tuto2.png)
 
-For now, only 4 colors are implented:
+Provided colors are:
+
+* grey or gray
 * red
+* yellow
 * green
 * blue
-* grey
-
-Next versions will implement severals other colors.
+* magenta
+* cyan
 
 
 ## Sizes ##
 
 By default, windows take 100% of terminal width. You can specify number of cols to use:
+
 ```
 ...
    window "Title of my window" "red" 36
@@ -87,6 +97,7 @@ By default, windows take 100% of terminal width. You can specify number of cols 
 This will set the width to 36 caracters (cols).
 
 You may use percent:
+
 ```
 window "Title of my window" "red" "50%"
 ```
