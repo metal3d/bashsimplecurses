@@ -15,7 +15,7 @@ main (){
     #memory usage
     window "Memory usage" "red"
     append_tabbed `cat /proc/meminfo | awk '/MemTotal/ {print "Total:" $2/1024}'` 2
-    append_tabbed `cat /proc/meminfo | awk '/MemFree/ {print "Used:" $2/1024}'` 2
+    append_tabbed `cat /proc/meminfo | awk '/MemFree/ {print "Free:" $2/1024}'` 2
     endwin
 
     #5 more used process ordered by cpu and memory usage
