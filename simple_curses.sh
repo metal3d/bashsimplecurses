@@ -148,17 +148,30 @@ window(){
     tput cuf $left
     #set title color
     case $color in
-        green)
-            echo -n -e "\E[01;32m"
+        grey|gray)
+            echo -ne "\E[01;30m"
             ;;
+
         red)
-            echo -n -e "\E[01;31m"
+            echo -ne "\E[01;31m"
+            ;;
+        green)
+            echo -ne "\E[01;32m"
+            ;;
+        yellow)
+            echo -ne "\E[01;33m"
             ;;
         blue)
-            echo -n -e "\E[01;34m"
+            echo -ne "\E[01;34m"
             ;;
-        grey|*)
-            echo -n -e "\E[01;37m"
+        magenta)
+            echo -ne "\E[01;35m"
+            ;;
+        cyan)
+            echo -ne "\E[01;36m"
+            ;;
+
+        *) #default to white
             ;;
     esac
     
