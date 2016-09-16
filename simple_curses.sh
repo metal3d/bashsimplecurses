@@ -12,25 +12,25 @@
  
 
 bsc_create_buffer(){
-  local BUFFER_DIR
-  # Try to use SHM, then $TMPDIR, then /tmp
-  if [ -d "/dev/shm" ]; then
-    BUFFER_DIR="/dev/shm"
-  elif [ -z $TMPDIR ]; then
-    BUFFER_DIR=$TMPDIR
-  else
-    BUFFER_DIR="/tmp"
-  fi 
-  local buffername
-  [[ "$1" != "" ]] &&  buffername=$1 || buffername="bashsimplecurses"
+    local BUFFER_DIR
+    # Try to use SHM, then $TMPDIR, then /tmp
+    if [ -d "/dev/shm" ]; then
+        BUFFER_DIR="/dev/shm"
+    elif [ -z $TMPDIR ]; then
+        BUFFER_DIR=$TMPDIR
+    else
+        BUFFER_DIR="/tmp"
+    fi 
+    local buffername
+    [[ "$1" != "" ]] &&  buffername=$1 || buffername="bashsimplecurses"
 
-  # Try to use mktemp before using the unsafe method
-  if [ -x `which mktemp` ]; then
-    #mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
-    mktemp ${BUFFER_DIR}/${buffername}.XXXXXXXXXX
-  else
-    echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
-  fi
+    # Try to use mktemp before using the unsafe method
+    if [ -x `which mktemp` ]; then
+        #mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
+        mktemp ${BUFFER_DIR}/${buffername}.XXXXXXXXXX
+    else
+        echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
+    fi
 }
 
 #Usefull variables
@@ -315,6 +315,7 @@ main_loop (){
     bsc_init_chars
     local time
     [[ "$1" == "" ]] && time=1 || time=$1
+    
     while [[ 1 ]];do
         tput cup 0 0 >> $BSC_BUFFER
         tput il $(tput lines) >>$BSC_BUFFER
