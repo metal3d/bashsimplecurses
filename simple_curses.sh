@@ -128,7 +128,7 @@ window(){
     local bgcolor
     title=$1
     color=$2        
-    bgcolor=$3
+    bgcolor=$4
     tput cup $BSC_POSY $BSC_POSX 
     bsc_cols=$(tput cols)
     bsc_cols=$((bsc_cols))
