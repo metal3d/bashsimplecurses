@@ -200,8 +200,10 @@ setcolor(){
         cyan)
             echo -ne "\E[01;36m"
             ;;
-
+        white)
+            echo -ne "\E[01;37m"
         *) #default to white
+            echo -ne "\E[01;37m"
             ;;
     esac
 }
@@ -234,6 +236,7 @@ setbgcolor(){
             echo -ne "\E[01;47m"
             ;;
         *) #default to black
+            echo -ne "\E[01;40m"
             ;;
     esac    
 
