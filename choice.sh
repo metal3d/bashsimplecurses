@@ -21,6 +21,12 @@ main(){
 		*B)
 			foo2="grey"
 		;;
+		*C)
+			foo1="grey"
+		;;
+		*D)
+			foo2="grey"
+		;;
 	esac
 	append "footext1" "blue" $foo1
 	append "footext2" "cyan" $foo2
