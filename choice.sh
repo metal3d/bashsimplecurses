@@ -8,8 +8,20 @@ main(){
 	window "test" "red" "33%" "blue"
 	foo1="black"
 	foo2="black"
-	[ "$selected" == "1" ] && foo1="grey"
-	[ "$selected" == "2" ] && foo2="grey"
+	case $selected in 
+		1)
+			foo1="grey"
+		;;
+		2)
+			foo2="grey"
+		;;
+		*A)
+			foo1="grey"
+		;;
+		*B)
+			foo2="grey"
+		;;
+	esac
 	append "footext1" "blue" $foo1
 	append "footext2" "cyan" $foo2
 	endwin
@@ -18,10 +30,12 @@ update(){
 	local ret
 	local success
 	#read -n 1 -s -t 1 ret
-	read -n 1 -s ret
+	read -n 1 -s ret 
 	success=$?
-	echo $ret
-	echo $success
+	[ "$ret" == "^" ] && echo "fub" && read -n 3 -s -t 0 ret
+#	echo $ret
+#	echo $success
 	[ "$success" == "0" ] && selected=$ret
+#	exit 1
 }
 main_loop update
