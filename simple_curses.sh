@@ -202,8 +202,8 @@ setcolor(){
             ;;
         white)
             echo -ne "\E[01;37m"
-        *) #default to white
-            echo -ne "\E[01;37m"
+        *) #default 
+            echo -ne "\E[01;39m"
             ;;
     esac
 }
@@ -235,18 +235,22 @@ setbgcolor(){
         white)
             echo -ne "\E[01;47m"
             ;;
-        *) #default to black
-            echo -ne "\E[01;40m"
+        *) #default
+            echo -ne "\E[01;49m"
             ;;
-    esac    
+    esac
 
 }
 #append a separator, new line
 addsep (){
     clean_line
     echo -ne $_SEPL
+    setcolor $1
+    setbgcolor $2
     local i
     for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
+    setcolor    
+    setbgcolor
     echo -ne $_SEPR
     bsc__nl
 }
@@ -265,22 +269,33 @@ clean_line(){
 append_file(){
     local align
     [[ "$1" != "" ]] && align="left" || align=$1
+    setcolor $2
+    setbgcolor $3
     local l
     while read l;do
         l=`echo $l | sed 's/____SPACES____/ /g'`
         l=$(echo $l |cut -c 1-$((BSC_LASTCOLS - 2)) )
         bsc__append "$l" $align
     done < "$1"
+
+    setcolor
+    setbgcolor
 }
 append(){
     text=$(echo -e $1 | fold -w $((BSC_LASTCOLS-2)) -s)
     rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
+
+    setcolor $3
+    setbgcolor $4
     local a
     while read a; do
         bsc__append "$a" $2
     done < $rbuffer
     rm -f $rbuffer
+
+    setcolor
+    setbgcolor
 }
 bsc__append(){
     clean_line
@@ -312,12 +327,18 @@ append_tabbed(){
     len=$(echo "$1" | wc -c )
     len=$((len-1))
     bsc_left=$((BSC_LASTCOLS/$2)) 
+
+    setcolor $4
+    setbgcolor $5
     local i 
     for i in `seq 0 $(($2))`; do
         tput rc
         tput cuf $((bsc_left*i+1))
         echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-2)) 
     done
+
+    setcolor
+    setbgcolor
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
     echo -ne $_VLINE
@@ -329,8 +350,12 @@ append_command(){
     local buff
     buff=`bsc_create_buffer command`
     echo -e "`$1`" 2>&1 | fold -w $((BSC_LASTCOLS - 2)) -s | sed 's/ /____SPACES____/g' > $buff
+    setcolor $2
+    setbgcolor $3
     append_file $buff "left"
     rm -f $buff
+    setcolor
+    setbgcolor
 }
 
 #close the window display
