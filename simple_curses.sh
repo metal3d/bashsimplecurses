@@ -164,6 +164,8 @@ window(){
     setbgcolor $bgcolor
     
     echo $title
+    setcolor
+    setbgcolor
     tput rc
     tput cuf $((bsc_cols-1))
     echo -ne $_VLINE
@@ -270,13 +272,11 @@ clean_line(){
 append_file(){
     local align
     [[ "$1" != "" ]] && align="left" || align=$1
-    setcolor $2
-    setbgcolor $3
     local l
     while read l;do
         l=`echo $l | sed 's/____SPACES____/ /g'`
         l=$(echo $l |cut -c 1-$((BSC_LASTCOLS - 2)) )
-        bsc__append "$l" $align
+        bsc__append "$l" $align $2 $3
     done < "$1"
 
     setcolor
@@ -287,16 +287,11 @@ append(){
     rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
 
-    setcolor $3
-    setbgcolor $4
     local a
     while read a; do
-        bsc__append "$a" $2
+        bsc__append "$a" $2 $3 $4
     done < $rbuffer
     rm -f $rbuffer
-
-    setcolor
-    setbgcolor
 }
 bsc__append(){
     clean_line
@@ -310,7 +305,11 @@ bsc__append(){
     [[ "$2" == "left" ]] && bsc_left=0
 
     tput cuf $bsc_left
+    setcolor $3
+    setbgcolor $4
     echo -e "$1"
+    setcolor    
+    setbgcolor
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
     echo -ne $_VLINE
