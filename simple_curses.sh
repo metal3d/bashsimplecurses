@@ -9,7 +9,11 @@
 #restriction to local variables and 
 #rename variables to ones which will not collide
 #by Markus Mikkolainen
- 
+#
+#support for bgcolors by Markus Mikkolainen
+#
+#support for delay loop function (instead of sleep, 
+#enabling keyboard input) by Markus Mikkolainen 
 
 bsc_create_buffer(){
     local BUFFER_DIR
