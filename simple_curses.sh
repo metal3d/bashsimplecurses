@@ -125,8 +125,10 @@ window(){
     BSC_LASTWINPOS=$BSC_POSY
     local title
     local color
+    local bgcolor
     title=$1
-    color=$2      
+    color=$2        
+    bgcolor=$3
     tput cup $BSC_POSY $BSC_POSX 
     bsc_cols=$(tput cols)
     bsc_cols=$((bsc_cols))
@@ -162,7 +164,6 @@ window(){
         grey|gray)
             echo -ne "\E[01;30m"
             ;;
-
         red)
             echo -ne "\E[01;31m"
             ;;
@@ -185,7 +186,34 @@ window(){
         *) #default to white
             ;;
     esac
-    
+   case $bgcolor in
+        grey|gray)
+            echo -ne "\E[01;40m"
+            ;;
+        red)
+            echo -ne "\E[01;41m"
+            ;;
+        green)
+            echo -ne "\E[01;42m"
+            ;;
+        yellow)
+            echo -ne "\E[01;43m"
+            ;;
+        blue)
+            echo -ne "\E[01;44m"
+            ;;
+        magenta)
+            echo -ne "\E[01;45m"
+            ;;
+        cyan)
+            echo -ne "\E[01;46m"
+            ;;
+        white)
+            echo -ne "\E[01;47m"
+            ;;
+        *) #default to black
+            ;;
+    esac    
     
     echo $title
     tput rc
