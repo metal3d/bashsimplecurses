@@ -160,6 +160,24 @@ window(){
     echo -ne $_VLINE
     tput cuf $bsc_left
     #set title color
+    setcolor $color
+    setbgcolor $bgcolor
+    
+    echo $title
+    tput rc
+    tput cuf $((bsc_cols-1))
+    echo -ne $_VLINE
+    echo -n -e "\e[00m"
+    bsc__nl
+    #then draw bottom line for title
+    addsep
+    
+    BSC_LASTCOLS=$bsc_cols
+
+}
+setcolor(){
+    local color
+    color=$1
     case $color in
         grey|gray)
             echo -ne "\E[01;30m"
@@ -186,7 +204,11 @@ window(){
         *) #default to white
             ;;
     esac
-   case $bgcolor in
+}
+setbgcolor(){
+    local bgcolor
+    bgcolor=$1
+    case $bgcolor in
         grey|gray)
             echo -ne "\E[01;40m"
             ;;
@@ -214,20 +236,8 @@ window(){
         *) #default to black
             ;;
     esac    
-    
-    echo $title
-    tput rc
-    tput cuf $((bsc_cols-1))
-    echo -ne $_VLINE
-    echo -n -e "\e[00m"
-    bsc__nl
-    #then draw bottom line for title
-    addsep
-    
-    BSC_LASTCOLS=$bsc_cols
 
 }
-
 #append a separator, new line
 addsep (){
     clean_line
