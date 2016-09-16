@@ -314,15 +314,23 @@ main_loop (){
     bsc_term_init
     bsc_init_chars
     local time
-    [[ "$1" == "" ]] && time=1 || time=$1
-    
+    local number_re
+    #everything starting with a number is a number
+    number_re='^[0-9]+.*$'
+    time=1
+    [[ "$1" == "" ]] || time=$1
     while [[ 1 ]];do
         tput cup 0 0 >> $BSC_BUFFER
         tput il $(tput lines) >>$BSC_BUFFER
         main >> $BSC_BUFFER 
         tput cup $(tput lines) $(tput cols) >> $BSC_BUFFER 
         refresh
-        sleep $time
+        if ! [[ $time =~ $number_re ]] ; then
+            #call function with name $time 
+            eval $time
+        else
+            sleep $time
+        fi   
         BSC_POSX=0
         BSC_POSY=0
     done
