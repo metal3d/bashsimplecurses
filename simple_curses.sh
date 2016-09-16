@@ -202,6 +202,7 @@ setcolor(){
             ;;
         white)
             echo -ne "\E[01;37m"
+            ;;
         *) #default 
             echo -ne "\E[01;39m"
             ;;
