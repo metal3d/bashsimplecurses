@@ -5,8 +5,14 @@
 #license: new BSD
 #
 #create_buffer patch by Laurent Bachelier
+#
+#restriction to local variables and 
+#rename variables to ones which will not collide
+#by Markus Mikkolainen
+ 
 
-create_buffer(){
+bsc_create_buffer(){
+  local BUFFER_DIR
   # Try to use SHM, then $TMPDIR, then /tmp
   if [ -d "/dev/shm" ]; then
     BUFFER_DIR="/dev/shm"
@@ -14,8 +20,8 @@ create_buffer(){
     BUFFER_DIR=$TMPDIR
   else
     BUFFER_DIR="/tmp"
-  fi
-
+  fi 
+  local buffername
   [[ "$1" != "" ]] &&  buffername=$1 || buffername="bashsimplecurses"
 
   # Try to use mktemp before using the unsafe method
@@ -28,53 +34,53 @@ create_buffer(){
 }
 
 #Usefull variables
-LASTCOLS=0
-BUFFER=`create_buffer`
-POSX=0
-POSY=0
-LASTWINPOS=0
+BSC_LASTCOLS=0
+BSC_BUFFER=`bsc_create_buffer`
+BSC_POSX=0
+BSC_POSY=0
+BSC_LASTWINPOS=0
 
 #call on SIGINT and SIGKILL
 #it removes buffer before to stop
-on_kill(){
-    tput cup 0 0 >> $BUFFER
+bsc_on_kill(){
+    tput cup 0 0 >> $BSC_BUFFER
     # Erase in-buffer
-    tput ed >> $BUFFER
-    rm -rf $BUFFER
+    tput ed >> $BSC_BUFFER
+    rm -rf $BSC_BUFFER
     exit 0
 }
-trap on_kill SIGINT SIGTERM
+trap bsc_on_kill SIGINT SIGTERM
 
 
 #initialize terminal
-term_init(){
-    POSX=0
-    POSY=0
-    tput clear >> $BUFFER
+bsc_term_init(){
+    BSC_POSX=0
+    BSC_POSY=0
+    tput clear >> $BSC_BUFFER
 }
 
 
 #change line
-_nl(){
-    POSY=$((POSY+1))
-    tput cup $POSY $POSX >> $BUFFER
+bsc__nl(){
+    BSC_POSY=$((BSC_POSY+1))
+    tput cup $BSC_POSY $BSC_POSX >> $BSC_BUFFER
     #echo 
 }
 
 
 move_up(){
-    set_position $POSX 0
+    set_position $BSC_POSX 0
 }
 
 col_right(){
-    left=$((LASTCOLS+POSX))
-    set_position $left $LASTWINPOS
+    left=$((BSC_LASTCOLS+BSC_POSX))
+    set_position $left $BSC_LASTWINPOS
 }
 
 #put display coordinates
 set_position(){
-    POSX=$1
-    POSY=$2
+    BSC_POSX=$1
+    BSC_POSY=$2
 }
 
 #initialize chars to use
@@ -87,10 +93,10 @@ _SEPR="\033(0u\033(B"
 _VLINE="\033(0x\033(B"
 _HLINE="\033(0q\033(B"
 
-init_chars(){
-    if [[ -z "$ASCIIMODE" && $LANG =~ .*\.UTF-8 ]] ; then ASCIIMODE=utf8; fi
-    if [[ "$ASCIIMODE" != "" ]]; then
-        if [[ "$ASCIIMODE" == "ascii" ]]; then
+bsc_init_chars(){
+    if [[ -z "$BSC_ASCIIMODE" && $LANG =~ .*\.UTF-8 ]] ; then BSC_ASCIIMODE=utf8; fi
+    if [[ "$BSC_ASCIIMODE" != "" ]]; then
+        if [[ "$BSC_ASCIIMODE" == "ascii" ]]; then
             _TL="+"
             _TR="+"
             _BL="+"
@@ -100,7 +106,7 @@ init_chars(){
             _VLINE="|"
             _HLINE="-"
         fi
-        if [[ "$ASCIIMODE" == "utf8" ]]; then
+        if [[ "$BSC_ASCIIMODE" == "utf8" ]]; then
             _TL="\xE2\x94\x8C"
             _TR="\xE2\x94\x90"
             _BL="\xE2\x94\x94"
@@ -114,38 +120,43 @@ init_chars(){
 }
 
 
-#Append a windo on POSX,POSY
+#Append a windo on BSC_POSX,BSC_POSY
 window(){
-    LASTWINPOS=$POSY
+    BSC_LASTWINPOS=$BSC_POSY
+    local title
+    local color
     title=$1
     color=$2      
-    tput cup $POSY $POSX 
-    cols=$(tput cols)
-    cols=$((cols))
+    tput cup $BSC_POSY $BSC_POSX 
+    bsc_cols=$(tput cols)
+    bsc_cols=$((bsc_cols))
     if [[ "$3" != "" ]]; then
-        cols=$3
+        bsc_cols=$3
         if [ $(echo $3 | grep "%") ];then
-            cols=$(tput cols)
-            cols=$((cols))
+            bsc_cols=$(tput cols)
+            bsc_cols=$((bsc_cols))
+            local w
             w=$(echo $3 | sed 's/%//')
-            cols=$((w*cols/100))
+            bsc_cols=$((w*bsc_cols/100))
         fi
     fi
+    local len
     len=$(echo "$1" | echo $(($(wc -c)-1)))
-    left=$(((cols/2) - (len/2) -1))
+    bsc_left=$(((bsc_cols/2) - (len/2) -1))
 
     #draw up line
     clean_line
     echo -ne $_TL
-    for i in `seq 3 $cols`; do echo -ne $_HLINE; done
+    local i
+    for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
     echo -ne $_TR
     #next line, draw title
-    _nl
+    bsc__nl
 
     tput sc
     clean_line
     echo -ne $_VLINE
-    tput cuf $left
+    tput cuf $bsc_left
     #set title color
     case $color in
         grey|gray)
@@ -178,14 +189,14 @@ window(){
     
     echo $title
     tput rc
-    tput cuf $((cols-1))
+    tput cuf $((bsc_cols-1))
     echo -ne $_VLINE
     echo -n -e "\e[00m"
-    _nl
+    bsc__nl
     #then draw bottom line for title
     addsep
     
-    LASTCOLS=$cols
+    BSC_LASTCOLS=$bsc_cols
 
 }
 
@@ -193,9 +204,10 @@ window(){
 addsep (){
     clean_line
     echo -ne $_SEPL
-    for i in `seq 3 $cols`; do echo -ne $_HLINE; done
+    local i
+    for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
     echo -ne $_SEPR
-    _nl
+    bsc__nl
 }
 
 
@@ -210,38 +222,42 @@ clean_line(){
 
 #add text on current window
 append_file(){
+    local align
     [[ "$1" != "" ]] && align="left" || align=$1
+    local l
     while read l;do
         l=`echo $l | sed 's/____SPACES____/ /g'`
-        l=$(echo $l |cut -c 1-$((LASTCOLS - 2)) )
-        _append "$l" $align
+        l=$(echo $l |cut -c 1-$((BSC_LASTCOLS - 2)) )
+        bsc__append "$l" $align
     done < "$1"
 }
 append(){
-    text=$(echo -e $1 | fold -w $((LASTCOLS-2)) -s)
-    rbuffer=`create_buffer bashsimplecursesfilebuffer`
+    text=$(echo -e $1 | fold -w $((BSC_LASTCOLS-2)) -s)
+    rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
+    local a
     while read a; do
-        _append "$a" $2
+        bsc__append "$a" $2
     done < $rbuffer
     rm -f $rbuffer
 }
-_append(){
+bsc__append(){
     clean_line
     tput sc
     echo -ne $_VLINE
+    local len
     len=$(echo "$1" | wc -c )
     len=$((len-1))
-    left=$((LASTCOLS/2 - len/2 -1))
+    bsc_left=$((BSC_LASTCOLS/2 - len/2 -1))
     
-    [[ "$2" == "left" ]] && left=0
+    [[ "$2" == "left" ]] && bsc_left=0
 
-    tput cuf $left
+    tput cuf $bsc_left
     echo -e "$1"
     tput rc
-    tput cuf $((LASTCOLS-1))
+    tput cuf $((BSC_LASTCOLS-1))
     echo -ne $_VLINE
-    _nl
+    bsc__nl
 }
 
 #add separated values on current window
@@ -251,24 +267,27 @@ append_tabbed(){
     clean_line
     tput sc
     echo -ne $_VLINE
+    local len
     len=$(echo "$1" | wc -c )
     len=$((len-1))
-    left=$((LASTCOLS/$2)) 
+    bsc_left=$((BSC_LASTCOLS/$2)) 
+    local i 
     for i in `seq 0 $(($2))`; do
         tput rc
-        tput cuf $((left*i+1))
-        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((left-2)) 
+        tput cuf $((bsc_left*i+1))
+        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-2)) 
     done
     tput rc
-    tput cuf $((LASTCOLS-1))
+    tput cuf $((BSC_LASTCOLS-1))
     echo -ne $_VLINE
-    _nl
+    bsc__nl
 }
 
 #append a command output
 append_command(){
-    buff=`create_buffer command`
-    echo -e "`$1`" 2>&1 | fold -w $((LASTCOLS - 2)) -s | sed 's/ /____SPACES____/g' > $buff 
+    local buff
+    buff=`bsc_create_buffer command`
+    echo -e "`$1`" 2>&1 | fold -w $((BSC_LASTCOLS - 2)) -s | sed 's/ /____SPACES____/g' > $buff
     append_file $buff "left"
     rm -f $buff
 }
@@ -277,32 +296,33 @@ append_command(){
 endwin(){
     clean_line
     echo -ne $_BL
-    for i in `seq 3 $LASTCOLS`; do echo -ne $_HLINE; done
+    for i in `seq 3 $BSC_LASTCOLS`; do echo -ne $_HLINE; done
     echo -ne $_BR
-    _nl
+    bsc__nl
 }
 
 #refresh display
 refresh (){
-    cat $BUFFER
-    echo "" > $BUFFER
+    cat $BSC_BUFFER
+    echo "" > $BSC_BUFFER
 }
 
 
 
 #main loop called
 main_loop (){
-    term_init
-    init_chars
+    bsc_term_init
+    bsc_init_chars
+    local time
     [[ "$1" == "" ]] && time=1 || time=$1
     while [[ 1 ]];do
-        tput cup 0 0 >> $BUFFER
-        tput il $(tput lines) >>$BUFFER
-        main >> $BUFFER 
-        tput cup $(tput lines) $(tput cols) >> $BUFFER 
+        tput cup 0 0 >> $BSC_BUFFER
+        tput il $(tput lines) >>$BSC_BUFFER
+        main >> $BSC_BUFFER 
+        tput cup $(tput lines) $(tput cols) >> $BSC_BUFFER 
         refresh
         sleep $time
-        POSX=0
-        POSY=0
+        BSC_POSX=0
+        BSC_POSY=0
     done
 }
