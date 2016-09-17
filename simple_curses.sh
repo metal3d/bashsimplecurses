@@ -97,6 +97,8 @@ _SEPL="\033(0t\033(B"
 _SEPR="\033(0u\033(B"
 _VLINE="\033(0x\033(B"
 _HLINE="\033(0q\033(B"
+_DIAMOND="\033(00\033(B"
+_BLOCK="\033(01\033(B"
 
 bsc_init_chars(){
     if [[ -z "$BSC_ASCIIMODE" && $LANG =~ .*\.UTF-8 ]] ; then BSC_ASCIIMODE=utf8; fi
@@ -110,6 +112,8 @@ bsc_init_chars(){
             _SEPR="+"
             _VLINE="|"
             _HLINE="-"
+            _DIAMOND="*"
+            _BLOCK="O"
         fi
         if [[ "$BSC_ASCIIMODE" == "utf8" ]]; then
             _TL="\xE2\x94\x8C"
@@ -120,6 +124,8 @@ bsc_init_chars(){
             _SEPR="\xE2\x94\xA4"
             _VLINE="\xE2\x94\x82"
             _HLINE="\xE2\x94\x80"
+            _DIAMOND="\xE2\x97\x86"
+            _BLOCK="\xE2\x96\x88"
         fi
     fi
 }
