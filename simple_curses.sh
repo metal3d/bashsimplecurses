@@ -397,7 +397,7 @@ main_loop (){
         refresh
         if ! [[ $time =~ $number_re ]] ; then
             #call function with name $time 
-            eval $time
+            eval $time || return
         else
             sleep $time
         fi   
