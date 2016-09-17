@@ -212,8 +212,8 @@ clean_line(){
 append_file(){
     [[ "$1" != "" ]] && align="left" || align=$1
     while read l;do
-        l=$(echo $l |cut -c 1-$((LASTCOLS - 2)) )
         l=`echo $l | sed 's/____SPACES____/ /g'`
+        l=$(echo $l |cut -c 1-$((LASTCOLS - 2)) )
         _append "$l" $align
     done < "$1"
 }
