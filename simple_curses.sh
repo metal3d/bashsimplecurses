@@ -51,6 +51,7 @@ bsc_on_kill(){
     # Erase in-buffer
     tput ed >> $BSC_BUFFER
     rm -rf $BSC_BUFFER
+    reset_colors
     exit 0
 }
 trap bsc_on_kill SIGINT SIGTERM
@@ -173,13 +174,16 @@ window(){
     tput rc
     tput cuf $((bsc_cols-1))
     echo -ne $_VLINE
-    echo -n -e "\e[00m"
+    reset_colors
     bsc__nl
     #then draw bottom line for title
     addsep
     
     BSC_LASTCOLS=$bsc_cols
 
+}
+reset_colors(){
+    echo -n -e "\e[00m"
 }
 setcolor(){
     local color
@@ -209,8 +213,8 @@ setcolor(){
         white)
             echo -ne "\E[01;37m"
             ;;
-        *) #default 
-            echo -ne "\E[01;39m"
+        *) #default should be 39 maybe?
+            echo -ne "\E[01;37m"
             ;;
     esac
 }
@@ -242,7 +246,10 @@ setbgcolor(){
         white)
             echo -ne "\E[01;47m"
             ;;
-        *) #default
+        black)
+            echo -ne "\E[01;49m"
+            ;;
+        *) #default should be 49
             echo -ne "\E[01;49m"
             ;;
     esac
@@ -397,7 +404,10 @@ main_loop (){
         refresh
         if ! [[ $time =~ $number_re ]] ; then
             #call function with name $time 
-            eval $time || return
+            eval $time || {
+                reset_colors
+                return
+            }
         else
             sleep $time
         fi   
