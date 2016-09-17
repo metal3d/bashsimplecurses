@@ -212,6 +212,7 @@ clean_line(){
 append_file(){
     [[ "$1" != "" ]] && align="left" || align=$1
     while read l;do
+        l=$(echo $l |cut -c 1-$((LASTCOLS - 2)) )
         l=`echo $l | sed 's/____SPACES____/ /g'`
         _append "$l" $align
     done < "$1"
@@ -256,7 +257,7 @@ append_tabbed(){
     for i in `seq 0 $(($2))`; do
         tput rc
         tput cuf $((left*i+1))
-        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" 
+        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((left-2)) 
     done
     tput rc
     tput cuf $((LASTCOLS-1))
@@ -267,7 +268,7 @@ append_tabbed(){
 #append a command output
 append_command(){
     buff=`create_buffer command`
-    echo -e "`$1`" | sed 's/ /____SPACES____/g' > $buff 2>&1
+    echo -e "`$1`" 2>&1 | fold -w $((LASTCOLS - 2)) -s | sed 's/ /____SPACES____/g' > $buff 
     append_file $buff "left"
     rm -f $buff
 }
