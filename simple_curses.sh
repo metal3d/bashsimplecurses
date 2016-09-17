@@ -99,6 +99,7 @@ _VLINE="\033(0x\033(B"
 _HLINE="\033(0q\033(B"
 _DIAMOND="\033(00\033(B"
 _BLOCK="\033(01\033(B"
+_SPINNER=('-' '\' '|' '/')
 
 bsc_init_chars(){
     if [[ -z "$BSC_ASCIIMODE" && $LANG =~ .*\.UTF-8 ]] ; then BSC_ASCIIMODE=utf8; fi
@@ -113,7 +114,7 @@ bsc_init_chars(){
             _VLINE="|"
             _HLINE="-"
             _DIAMOND="*"
-            _BLOCK="O"
+            _BLOCK="#"
         fi
         if [[ "$BSC_ASCIIMODE" == "utf8" ]]; then
             _TL="\xE2\x94\x8C"
@@ -298,6 +299,37 @@ append_file(){
 
     setcolor
     setbgcolor
+}
+#
+#
+#   progressbar <length> <progress> <max> [color] [bgcolor]
+#
+progressbar(){
+    local done
+    local todo
+    local len
+    local progress
+    local max
+    local bar
+    local modulo
+    len=$1
+    progress=$2
+    max=$3
+    len=$(( len - 2 ))
+    
+    done=$(( progress * len / max))
+    todo=$(( len - done - 1))
+    modulo=$(( progress % 4 ))
+    bar="[";
+    for i in `seq 0 $(($done))`;do
+        bar="${bar}${_BLOCK}"
+    done
+    bar="${bar}${_SPINNER[modulo]}"
+    for i in `seq 0 $(($todo))`;do
+        bar="${bar} "
+    done
+    bar="${bar}]"
+    bsc__append "$bar" "left" $4 $5
 }
 append(){
     text=$(echo -e $1 | fold -w $((BSC_LASTCOLS-2)) -s)
