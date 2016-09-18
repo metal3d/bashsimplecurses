@@ -301,6 +301,99 @@ append_file(){
     setbgcolor
 }
 #
+#   blinkenlights <text> <color> <color2> <incolor> <bgcolor> <light1> [light2...]
+#
+blinkenlights(){
+    local color
+    local color2
+    local incolor
+    local bgcolor
+    local lights
+    local col
+    local text
+    text=$1
+    color=$2
+    color2=$3
+    incolor=$4  
+    bgcolor=$5
+
+    declare -a params
+    params=( "$@" )
+    unset params[0]
+    unset params[1]
+    unset params[2]
+    unset params[3]
+    unset params[4]
+    params=( "${params[@]}" )
+
+    lights=""
+    while [ -n "$params" ];do
+        col=$incolor
+        [ "${params[0]}" == "1" ] && col=$color
+        [ "${params[0]}" == "2" ] && col=$color2
+        lights="${lights} ${_DIAMOND} ${col} ${bgcolor}"
+        unset params[0]
+        params=( "${params[@]}" )
+    done
+
+    bsc__multiappend "left" "[" $incolor $bgcolor $lights "]${text}" $incolor $bgcolor 
+}
+
+#
+#   vumeter <text> <width> <value> <max> [color] [color2] [inactivecolor] [bgcolor]
+#   
+vumeter(){
+    local done
+    local todo
+    local over
+    local len
+    local max
+
+    local green
+    local red
+    local rest
+
+    local incolor
+    local okcolor
+    local overcolor
+    text=$1
+    len=$2
+    value=$3
+    max=$4
+    len=$(( len - 2 ))
+    incolor=$7
+    okcolor=$5
+    overcolor=$6
+    [ "$incolor" == "" ] && incolor="grey"
+    [ "$okcolor" == "" ] && okcolor="green"
+    [ "$overcolor" == "" ] && overcolor="red"
+
+    done=$(( value * len / max  ))
+    todo=$(( len - done - 1))
+
+    [ "$(( len * 2 / 3 ))" -lt "$done" ] && {
+        over=$(( done - ( len * 2 /3 )))
+        done=$(( len * 2 / 3 ))
+    }
+    green=""
+    red=""
+    rest=""
+    
+    for i in `seq 0 $(($done))`;do
+        green="${green}|"
+    done
+    for i in `seq 0 $(($over))`;do
+        red="${red}|"
+    done
+    red=${red:1}
+    for i in `seq 0 $(($todo))`;do
+        rest="${rest}."
+    done
+    [ "$red" == ""  ] && bsc__multiappend "left" "[" $incolor "black" "${green}" $okcolor "black" "${rest}]${text}" $incolor "black"
+    [ "$red" != ""  ] && bsc__multiappend "left" "[" $incolor "black" "${green}" $okcolor "black" "${red}" $overcolor "black" "${rest}]${text}" $incolor "black"
+}
+#
+#
 #
 #   progressbar <length> <progress> <max> [color] [bgcolor]
 #
@@ -342,6 +435,57 @@ append(){
     done < $rbuffer
     rm -f $rbuffer
 }
+#
+#   append a single line of text consisting of multiple
+#   segments
+#   bsc__multiappend <centering> (<text> <color> <bgcolor>)+
+#
+bsc__multiappend(){
+    local len
+    local text
+    declare -a params
+    params=( "$@" )
+    text=""
+    unset params[0]
+    params=( "${params[@]}" )
+    while [ -n "$params" ];do
+        text="${text}${params[0]}"
+        unset params[0]
+        unset params[1]
+        unset params[2]    
+        params=( "${params[@]}" )
+    done
+    clean_line
+    tput sc
+    echo -ne $_VLINE
+    len=$(echo "$text" | wc -c )
+    len=$((len-1))
+    bsc_left=$((BSC_LASTCOLS/2 - len/2 -1))
+    
+    params=( "$@")
+    [[ "${params[0]}" == "left" ]] && bsc_left=0
+    unset params[0]
+    params=( "${params[@]}" )
+    tput cuf $bsc_left
+    while [ -n "${params}" ];do
+        setcolor "${params[1]}"
+        setbgcolor "${params[2]}"
+        echo -ne "${params[0]}"
+        setcolor    
+        setbgcolor
+        unset params[0]
+        unset params[1]
+        unset params[2]
+        params=( "${params[@]}" )
+    done
+    tput rc
+    tput cuf $((BSC_LASTCOLS-1))
+    echo -ne $_VLINE
+    bsc__nl
+}
+#
+#   bsc__append <text> [centering] [color] [bgcolor]
+#
 bsc__append(){
     clean_line
     tput sc
