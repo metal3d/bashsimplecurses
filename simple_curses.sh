@@ -368,7 +368,7 @@ vumeter(){
     [ "$okcolor" == "" ] && okcolor="green"
     [ "$overcolor" == "" ] && overcolor="red"
 
-    done=$(( value * len / max  ))
+    done=$(( value * len / max  + 1 ))
     todo=$(( len - done - 1))
 
     [ "$(( len * 2 / 3 ))" -lt "$done" ] && {
@@ -379,7 +379,7 @@ vumeter(){
     red=""
     rest=""
     
-    for i in `seq 0 $(($done))`;do
+    for i in `seq 1 $(($done))`;do
         green="${green}|"
     done
     for i in `seq 0 $(($over))`;do
