@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $(dirname $0)/simple_curses.sh
+source $(dirname $0)/../simple_curses.sh
 main(){
 	window "Test 1" "red" "33%"
 		append "First simple window"

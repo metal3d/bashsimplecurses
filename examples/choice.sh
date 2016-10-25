@@ -4,7 +4,7 @@
 #   returns 255 if none chosen
 #   returns number of choice if one chosen
 #   
-source ./simple_curses.sh
+source $(dirname $0)/../simple_curses.sh
 declare -a SELECTABLES
 SELECTABLES=( "$@" )
 arraylen=${#SELECTABLES[@]}

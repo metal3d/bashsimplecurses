@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. `dirname $0`/simple_curses.sh
+. `dirname $0`/../simple_curses.sh
 
 main (){
     #basic informations, hostname, date,...
