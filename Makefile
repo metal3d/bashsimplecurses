@@ -1,4 +1,6 @@
-LIBDIR=/usr/local/lib
+PREFIX ?= /usr/local
+LIBDIR ?= $(DESTDIR)$(PREFIX)/lib
+
 VERSION=0.0.1-alpha
 
 
