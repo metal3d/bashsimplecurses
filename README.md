@@ -1,5 +1,5 @@
 
-#Bash Simple Curses
+# Bash Simple Curses
 
 [![Documentation Status](https://readthedocs.org/projects/bashsimplecurses/badge/?version=latest)](https://readthedocs.org/projects/bashsimplecurses/?badge=latest)
                 
