@@ -62,6 +62,7 @@ bsc_term_init(){
     BSC_POSX=0
     BSC_POSY=0
     tput clear >> $BSC_BUFFER
+    tput civis >> $BSC_BUFFER
 }
 
 
