@@ -52,6 +52,7 @@ bsc_on_kill(){
     tput ed >> $BSC_BUFFER
     rm -rf $BSC_BUFFER
     reset_colors
+    tput cnorm
     exit 0
 }
 trap bsc_on_kill SIGINT SIGTERM
