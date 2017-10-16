@@ -1,3 +1,4 @@
+SHELL=bash
 PREFIX ?= /usr/local
 LIBDIR ?= $(DESTDIR)$(PREFIX)/lib
 
