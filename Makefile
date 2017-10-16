@@ -2,7 +2,7 @@ SHELL=bash
 PREFIX ?= /usr/local
 LIBDIR ?= $(DESTDIR)$(PREFIX)/lib
 
-VERSION=0.0.1-alpha
+VERSION=1.2
 
 
 all: test
