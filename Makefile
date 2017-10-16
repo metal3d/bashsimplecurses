@@ -33,8 +33,11 @@ test:
 	@which img2txt > /dev/null && echo -e "\033[32mOk\033[0m - you can use img2txt command to display images on window" || echo -e "\033[33mWarning\033[0m - You should install caca-utils or img2txt command"
 
 dist:
+	rm -rf ./bashsimplecurses-$(VERSION)
 	mkdir ./bashsimplecurses-$(VERSION)
+	cp README.md README
 	cp LICENSE README AUTHORS INSTALL simple_curses.sh Makefile ./bashsimplecurses-$(VERSION)
 	tar cvfz bashsimplecurses-$(VERSION).tar.gz ./bashsimplecurses-$(VERSION)
 	rm -rf ./bashsimplecurses-$(VERSION)
 	@echo "bashsimplecurses-$(VERSION).tar.gz done"
+	rm -f README
