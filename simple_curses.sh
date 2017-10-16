@@ -292,11 +292,13 @@ append_file(){
     local align
     [[ "$1" != "" ]] && align="left" || align=$1
     local l
+    IFS=''
     while read l;do
         l=`echo $l | sed 's/____SPACES____/ /g'`
         l=$(echo $l |cut -c 1-$((BSC_LASTCOLS - 2)) )
         bsc__append "$l" $align $2 $3
     done < "$1"
+    unset IFS
 
     setcolor
     setbgcolor
