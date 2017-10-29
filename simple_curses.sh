@@ -20,8 +20,8 @@ bsc_create_buffer(){
     # Try to use SHM, then $TMPDIR, then /tmp
     if [ -d "/dev/shm" ]; then
         BUFFER_DIR="/dev/shm"
-    elif [ -z $TMPDIR ]; then
-        BUFFER_DIR=$TMPDIR
+    elif [ -n "$TMPDIR" ]; then
+        BUFFER_DIR="$TMPDIR"
     else
         BUFFER_DIR="/tmp"
     fi 
