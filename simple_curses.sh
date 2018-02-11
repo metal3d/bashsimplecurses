@@ -518,15 +518,17 @@ append_tabbed(){
     [[ $2 == "" ]] && echo "append_tabbed: Second argument needed" >&2 && exit 1
     [[ "$3" != "" ]] && delim=$3 || delim=":"
     clean_line
-    tput sc
+    
     echo -ne $_VLINE
     local len
     len=$(echo "$1" | wc -c )
     len=$((len-1))
     bsc_left=$((BSC_LASTCOLS/$2)) 
-
+    
     setcolor $4
     setbgcolor $5
+    tput sc
+
     local i 
     for i in `seq 0 $(($2))`; do
         tput rc
