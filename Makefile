@@ -20,6 +20,7 @@ help:
 
 install:
 	@echo "Install..."
+	@mkdir -p $(LIBDIR)
 	install -m655 simple_curses.sh $(LIBDIR)/simple_curses.sh
 	@echo "done"
 
