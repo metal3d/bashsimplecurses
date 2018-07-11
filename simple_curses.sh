@@ -429,7 +429,7 @@ progressbar(){
     bsc__append "$bar" "left" $4 $5
 }
 append(){
-    text=$(echo -e $1 | fold -w $((BSC_LASTCOLS-2)) -s)
+    text=$(echo -e "$1" | fold -w $((BSC_LASTCOLS-2)) -s)
     rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
 
