@@ -199,31 +199,31 @@ setcolor(){
     color=$1
     case $color in
         grey|gray)
-            echo -ne "\E[01;30m"
+            echo -ne "\033[01;30m"
             ;;
         red)
-            echo -ne "\E[01;31m"
+            echo -ne "\033[01;31m"
             ;;
         green)
-            echo -ne "\E[01;32m"
+            echo -ne "\033[01;32m"
             ;;
         yellow)
-            echo -ne "\E[01;33m"
+            echo -ne "\033[01;33m"
             ;;
         blue)
-            echo -ne "\E[01;34m"
+            echo -ne "\033[01;34m"
             ;;
         magenta)
-            echo -ne "\E[01;35m"
+            echo -ne "\033[01;35m"
             ;;
         cyan)
-            echo -ne "\E[01;36m"
+            echo -ne "\033[01;36m"
             ;;
         white)
-            echo -ne "\E[01;37m"
+            echo -ne "\033[01;37m"
             ;;
         *) #default should be 39 maybe?
-            echo -ne "\E[01;37m"
+            echo -ne "\033[01;37m"
             ;;
     esac
 }
@@ -232,34 +232,34 @@ setbgcolor(){
     bgcolor=$1
     case $bgcolor in
         grey|gray)
-            echo -ne "\E[01;40m"
+            echo -ne "\033[01;40m"
             ;;
         red)
-            echo -ne "\E[01;41m"
+            echo -ne "\033[01;41m"
             ;;
         green)
-            echo -ne "\E[01;42m"
+            echo -ne "\033[01;42m"
             ;;
         yellow)
-            echo -ne "\E[01;43m"
+            echo -ne "\033[01;43m"
             ;;
         blue)
-            echo -ne "\E[01;44m"
+            echo -ne "\033[01;44m"
             ;;
         magenta)
-            echo -ne "\E[01;45m"
+            echo -ne "\033[01;45m"
             ;;
         cyan)
-            echo -ne "\E[01;46m"
+            echo -ne "\033[01;46m"
             ;;
         white)
-            echo -ne "\E[01;47m"
+            echo -ne "\033[01;47m"
             ;;
         black)
-            echo -ne "\E[01;49m"
+            echo -ne "\033[01;49m"
             ;;
         *) #default should be 49
-            echo -ne "\E[01;49m"
+            echo -ne "\033[01;49m"
             ;;
     esac
 
