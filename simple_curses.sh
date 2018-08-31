@@ -43,6 +43,7 @@ BSC_BUFFER=`bsc_create_buffer`
 BSC_POSX=0
 BSC_POSY=0
 BSC_LASTWINPOS=0
+BSC_BORDER_COLOR=""
 
 #call on SIGINT and SIGKILL
 #it removes buffer before to stop
@@ -134,6 +135,28 @@ bsc_init_chars(){
 }
 
 
+v_line(){
+    setcolor $BSC_BORDER_COLOR
+    echo -ne $_VLINE
+    setcolor
+}
+
+h_line(){
+    setcolor $BSC_BORDER_COLOR
+    for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
+    setcolor
+}
+
+_corner() {
+    setcolor $BSC_BORDER_COLOR
+    echo -ne $1
+    setcolor
+}
+
+window_set_border_color() {
+    BSC_BORDER_COLOR=$1
+}
+
 #Append a windo on BSC_POSX,BSC_POSY
 window(){
     BSC_LASTWINPOS=$BSC_POSY
@@ -162,16 +185,16 @@ window(){
 
     #draw up line
     clean_line
-    echo -ne $_TL
+    _corner $_TL
     local i
-    for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
-    echo -ne $_TR
+    h_line
+    _corner $_TR
     #next line, draw title
     bsc__nl
 
     tput sc
     clean_line
-    echo -ne $_VLINE
+    v_line
     tput cuf $bsc_left
     #set title color
     setcolor $color
@@ -182,7 +205,7 @@ window(){
     setbgcolor
     tput rc
     tput cuf $((bsc_cols-1))
-    echo -ne $_VLINE
+    v_line
     reset_colors
     bsc__nl
     #then draw bottom line for title
@@ -267,14 +290,14 @@ setbgcolor(){
 #append a separator, new line
 addsep (){
     clean_line
-    echo -ne $_SEPL
+    _corner $_SEPL
     setcolor $1
     setbgcolor $2
     local i
-    for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
+    h_line
     setcolor    
     setbgcolor
-    echo -ne $_SEPR
+    _corner $_SEPR
     bsc__nl
 }
 
@@ -461,7 +484,7 @@ bsc__multiappend(){
     done
     clean_line
     tput sc
-    echo -ne $_VLINE
+    v_line
     len=$(echo "$text" | wc -c )
     len=$((len-1))
     bsc_left=$((BSC_LASTCOLS/2 - len/2 -1))
@@ -484,7 +507,7 @@ bsc__multiappend(){
     done
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
-    echo -ne $_VLINE
+    v_line
     bsc__nl
 }
 #
@@ -493,7 +516,7 @@ bsc__multiappend(){
 bsc__append(){
     clean_line
     tput sc
-    echo -ne $_VLINE
+    v_line
     local len
     len=$(echo "$1" | wc -c )
     len=$((len-1))
@@ -509,7 +532,7 @@ bsc__append(){
     setbgcolor
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
-    echo -ne $_VLINE
+    v_line
     bsc__nl
 }
 
@@ -519,7 +542,7 @@ append_tabbed(){
     [[ "$3" != "" ]] && delim=$3 || delim=":"
     clean_line
     tput sc
-    echo -ne $_VLINE
+    v_line
     local len
     len=$(echo "$1" | wc -c )
     len=$((len-1))
@@ -538,7 +561,7 @@ append_tabbed(){
     setbgcolor
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
-    echo -ne $_VLINE
+    v_line
     bsc__nl
 }
 
@@ -558,9 +581,9 @@ append_command(){
 #close the window display
 endwin(){
     clean_line
-    echo -ne $_BL
-    for i in `seq 3 $BSC_LASTCOLS`; do echo -ne $_HLINE; done
-    echo -ne $_BR
+    _corner $_BL
+    h_line
+    _corner $_BR
     bsc__nl
 }
 
