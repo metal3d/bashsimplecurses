@@ -192,7 +192,7 @@ window(){
 
 }
 reset_colors(){
-    echo -n -e "\e[00m"
+    echo -n -e "\E[00m"
 }
 setcolor(){
     local color
