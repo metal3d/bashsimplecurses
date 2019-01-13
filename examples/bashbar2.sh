@@ -22,7 +22,7 @@ main (){
         move_up
 
     #5 more used process ordered by cpu and memory usage
-    window "Processus taking memory and CPU" "green" "50%"
+    window "Processes taking memory and CPU" "green" "50%"
     for i in `seq 2 6`; do
         append_tabbed "`ps ax -o pid,rss,pcpu,ucmd --sort=-cpu,-rss | sed -n "$i,$i p" | awk '{printf "%s: %smo:  %s%%" , $4, $2/1024, $3 }'`" 3
     done
