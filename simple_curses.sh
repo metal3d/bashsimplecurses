@@ -416,7 +416,8 @@ progressbar(){
     
     done=$(( progress * len / max))
     todo=$(( len - done - 1))
-    modulo=$(( progress % 4 ))
+    time_seconds=$(date +%s)
+    modulo=$(( time_seconds % 4 ))
     bar="[";
     for i in `seq 0 $(($done))`;do
         bar="${bar}${_BLOCK}"
