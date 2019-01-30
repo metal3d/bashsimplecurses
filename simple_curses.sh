@@ -414,15 +414,18 @@ progressbar(){
     max=$3
     len=$(( len - 2 ))
     
-    done=$(( progress * len / max))
-    todo=$(( len - done - 1))
+    done=$(( progress * len / max ))
+    todo=$(( len - done - 1 ))
     modulo=$(( progress % 4 ))
+
     bar="[";
-    for i in `seq 0 $(($done))`;do
+    for (( c=1; c<=done; c++ )); do
         bar="${bar}${_BLOCK}"
     done
-    bar="${bar}${_SPINNER[modulo]}"
-    for i in `seq 0 $(($todo))`;do
+    if [ "$done" -lt "$len" ]; then
+        bar="${bar}${_SPINNER[modulo]}"
+    fi
+    for (( c=1; c<=todo; c++ )); do
         bar="${bar} "
     done
     bar="${bar}]"
