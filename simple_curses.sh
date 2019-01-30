@@ -395,7 +395,7 @@ vumeter(){
 #
 #
 #
-#   progressbar <length> <progress> <max> [color] [bgcolor]
+#   progressbar <progress> <max> [lenght] [color] [bgcolor]
 #
 progressbar(){
     local done
