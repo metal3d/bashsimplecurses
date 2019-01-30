@@ -412,7 +412,6 @@ progressbar(){
     len=$1
     progress=$2
     max=$3
-    len=$(( len - 2 ))
     
     done=$(( progress * len / max ))
     todo=$(( len - done - 1 ))
