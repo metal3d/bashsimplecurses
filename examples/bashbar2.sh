@@ -3,7 +3,7 @@
 . `dirname $0`/../simple_curses.sh
 
 main (){
-    #basic informations, hostname, date,...
+    #basic information, hostname, date, ...
     window "`hostname`" "red" "50%"
     append "`date`"
     addsep
@@ -21,7 +21,7 @@ main (){
         col_right
         move_up
 
-    #5 more used process ordered by cpu and memory usage
+    #5 most used processes ordered by cpu and memory usage
     window "Processes taking memory and CPU" "green" "50%"
     for i in `seq 2 6`; do
         append_tabbed "`ps ax -o pid,rss,pcpu,ucmd --sort=-cpu,-rss | sed -n "$i,$i p" | awk '{printf "%s: %smo:  %s%%" , $4, $2/1024, $3 }'`" 3
@@ -35,7 +35,7 @@ main (){
     rm -f /dev/shm/deskbar.dmesg
     endwin
 
-    #a special manipulation to get net interfaces  and IP
+    #a special manipulation to get net interfaces and IP
     window "Inet interfaces" "grey" "50%"
     _ifaces=$(for inet in `ifconfig | cut -f1 -d " " | sed -n "/./ p"`; do ifconfig $inet | awk 'BEGIN{printf "%s", "'"$inet"'"} /adr:/ {printf ":%s\n", $2}'|sed 's/adr://'; done)
     for ifac in $_ifaces; do
