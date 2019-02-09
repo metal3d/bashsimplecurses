@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-#   ./choice "choice1" "choice2" "choice3"
-#   returns 255 if none chosen
-#   returns number of choice if one chosen
-#   
+#   ./progress.sh
+#   Shows animated progress bar.
+#   returns 255 when progress exceeds maxprogress
+#
 source $(dirname $0)/../simple_curses.sh
 progress=0
 maxprogress=97
