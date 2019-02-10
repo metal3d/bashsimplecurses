@@ -11,7 +11,7 @@ maxprogress=97
 main(){
     window "waiting for bar to move" "red" "33%" "blue"
     vumeter "RVol" "15" "25" "30" "green" "red" "gray"
-    blinkenlights "Blinken" "white" "red" "blue" "black" $((progress % 2 )) $((progress % 3 )) $((progress % 5 )) $((progress % 7 )) $((progress % 9 )) $((progress % 6 ))
+    blinkenlights "Blinken" "green" "red" "gray" "black" $((progress % 2 )) $((progress % 3 )) $((progress % 5 )) $((progress % 7 )) $((progress % 9 )) $((progress % 6 ))
     endwin
 }
 update(){
