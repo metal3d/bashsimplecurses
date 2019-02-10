@@ -425,7 +425,7 @@ progressbar(){
     bsc__append "$bar" "left" $4 $5
 }
 append(){
-    text=$(echo -e "$1" | fold -w $((BSC_LASTCOLS-2)) -s)
+    text=$(echo -e "$1" | fold -w $((BSC_LASTCOLS-3)) -s)
     rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
 
@@ -527,12 +527,12 @@ append_tabbed(){
     for i in `seq 0 $(($2))`; do
         tput rc
         tput cuf $((bsc_left*i+1))
-        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-2)) 
+        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-3))
     done
 
     tput rc
     reset_colors
-    tput cuf $((BSC_LASTCOLS-1))
+    tput cuf $((BSC_LASTCOLS-2))
     echo -ne $_VLINE
     bsc__nl
 }
