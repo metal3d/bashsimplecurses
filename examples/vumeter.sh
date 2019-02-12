@@ -3,7 +3,7 @@
 #   ./vumeter.sh
 #   This examples shows two components: a vumeter and a blinkenlights.
 #   The vumeter shows a constant value, while the blinkenlights show variable
-#   status of each light until the progress exceed maxprogress, then returns 255
+#   status of each light until the progress exceeds maxprogress, then returns 255
 #
 source $(dirname $0)/../simple_curses.sh
 progress=0
