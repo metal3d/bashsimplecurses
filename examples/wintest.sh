@@ -58,7 +58,7 @@ main(){
     endwin
 
     window "Little" "green" "12%"
-        append "this is a simple\nlittle window"
+        append "This is a simple\nlittle window"
     endwin
 
     col_right
