@@ -3,7 +3,7 @@
 #   ./choice "choice1" "choice2" "choice3"
 #   returns 255 if none chosen
 #   returns number of choice if one chosen
-#   
+#
 source $(dirname $0)/../simple_curses.sh
 declare -a SELECTABLES
 SELECTABLES=( "$@" )
@@ -18,11 +18,11 @@ main(){
     for i in ${SELECTABLES[@]};do
         bgcolor="black"
         color="blue"
-        [ "$selected" == "$count" ] && { 
-            bgcolor="blue" 
+        [ "$selected" == "$count" ] && {
+            bgcolor="blue"
             color="red"
         }
-        append "$i" $color $bgcolor 
+        append "$i" $color $bgcolor
         count=$(( count + 1 ))
     done
     endwin
@@ -32,7 +32,7 @@ update(){
     local ret
     local success
     #read -n 1 -s -t 1 ret
-    read -n 1 -s ret 
+    read -n 1 -s ret
     success=$?
     read -sN1 -t 0.0001 k1
     read -sN1 -t 0.0001 k2
@@ -40,7 +40,7 @@ update(){
     ret+=${k1}${k2}${k3}
 
     [ "$success" == "0" ] && {
-        case $ret in 
+        case $ret in
             [0-9])
                 selected=$(( $ret - 1 ))
             ;;

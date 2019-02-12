@@ -160,7 +160,7 @@ window(){
     len=$(echo "$1" | echo $(($(wc -c)-1)))
     bsc_left=$(((bsc_cols/2) - (len/2) -1))
 
-    #draw up line
+    #draw upper line
     clean_line
     echo -ne $_TL
     local i
@@ -169,7 +169,6 @@ window(){
     #next line, draw title
     bsc__nl
 
-    tput sc
     clean_line
     echo -ne $_VLINE
     tput cuf $bsc_left
@@ -178,8 +177,7 @@ window(){
     setbgcolor $bgcolor
     
     echo $title
-    setcolor
-    setbgcolor
+    reset_colors
     tput rc
     tput cuf $((bsc_cols-1))
     echo -ne $_VLINE
@@ -268,12 +266,9 @@ setbgcolor(){
 addsep (){
     clean_line
     echo -ne $_SEPL
-    setcolor $1
-    setbgcolor $2
     local i
     for i in `seq 3 $bsc_cols`; do echo -ne $_HLINE; done
-    setcolor    
-    setbgcolor
+    reset_colors
     echo -ne $_SEPR
     bsc__nl
 }
@@ -281,10 +276,12 @@ addsep (){
 
 #clean the current line
 clean_line(){
+    #set default color
+    reset_colors
+
     tput sc
     #tput el
     tput rc
-    
 }
 
 
@@ -301,8 +298,7 @@ append_file(){
     done < "$1"
     unset IFS
 
-    setcolor
-    setbgcolor
+    reset_colors
 }
 #
 #   blinkenlights <text> <color> <color2> <incolor> <bgcolor> <light1> [light2...]
@@ -412,25 +408,26 @@ progressbar(){
     len=$1
     progress=$2
     max=$3
-    len=$(( len - 2 ))
     
-    done=$(( progress * len / max))
-    todo=$(( len - done - 1))
-    time_seconds=$(date +%s)
-    modulo=$(( time_seconds % 4 ))
+    done=$(( progress * len / max ))
+    todo=$(( len - done - 1 ))
+    modulo=$(( progress % 4 ))
+    
     bar="[";
-    for i in `seq 0 $(($done))`;do
+    for (( c=1; c<=done; c++ )); do
         bar="${bar}${_BLOCK}"
     done
-    bar="${bar}${_SPINNER[modulo]}"
-    for i in `seq 0 $(($todo))`;do
+    if [ "$done" -lt "$len" ]; then
+        bar="${bar}${_SPINNER[modulo]}"
+    fi
+    for (( c=1; c<=todo; c++ )); do
         bar="${bar} "
     done
     bar="${bar}]"
     bsc__append "$bar" "left" $4 $5
 }
 append(){
-    text=$(echo -e "$1" | fold -w $((BSC_LASTCOLS-2)) -s)
+    text=$(echo -e "$1" | fold -w $((BSC_LASTCOLS-3)) -s)
     rbuffer=`bsc_create_buffer bashsimplecursesfilebuffer`
     echo  -e "$text" > $rbuffer
 
@@ -476,8 +473,7 @@ bsc__multiappend(){
         setcolor "${params[1]}"
         setbgcolor "${params[2]}"
         echo -ne "${params[0]}"
-        setcolor    
-        setbgcolor
+        reset_colors
         unset params[0]
         unset params[1]
         unset params[2]
@@ -506,8 +502,7 @@ bsc__append(){
     setcolor $3
     setbgcolor $4
     echo -e "$1"
-    setcolor    
-    setbgcolor
+    reset_colors
     tput rc
     tput cuf $((BSC_LASTCOLS-1))
     echo -ne $_VLINE
@@ -534,13 +529,12 @@ append_tabbed(){
     for i in `seq 0 $(($2))`; do
         tput rc
         tput cuf $((bsc_left*i+1))
-        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-2)) 
+        echo "`echo $1 | cut -f$((i+1)) -d"$delim"`" | cut -c 1-$((bsc_left-3))
     done
 
-    setcolor
-    setbgcolor
     tput rc
-    tput cuf $((BSC_LASTCOLS-1))
+    reset_colors
+    tput cuf $((BSC_LASTCOLS-2))
     echo -ne $_VLINE
     bsc__nl
 }
@@ -554,8 +548,7 @@ append_command(){
     setbgcolor $3
     append_file $buff "left"
     rm -f $buff
-    setcolor
-    setbgcolor
+    reset_colors
 }
 
 #close the window display
