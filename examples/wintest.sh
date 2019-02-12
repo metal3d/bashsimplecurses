@@ -13,10 +13,10 @@ main(){
 			append_command "tree -L 2 -C -A ./"
 		else
 			append "Please install tree command"
-		fi 
-	endwin 
+		fi
+	endwin
 
-	col_right 
+	col_right
 	move_up
 
 	window "Test 2" "red" "33%"
@@ -35,7 +35,7 @@ main(){
 	endwin
 
 	window "Let's play with libcaca" "green" "33%"
-		command="img2txt tux.gif -y 12 -W 45 -d ordered2 -f utf8"
+        command="img2txt $(dirname $0)/../tux.gif -y 12 -W 45 -d ordered2 -f utf8"
 		append "$command"
 		if [[ -x `which img2txt 2> /dev/null` ]]; then
 			append_command "$command"
@@ -44,9 +44,9 @@ main(){
 		fi
 	endwin
 
-	col_right 
+	col_right
 	move_up
-	
+
 	window "Test 5" "red" "34%"
 		append "We can add some little windows... rememeber that very long lines are wrapped to fit window !" "left"
 	endwin
@@ -62,7 +62,7 @@ main(){
 	endwin
 
 	col_right
-	
+
 	window "Other window" "blue" "22%"
 		append "And this is\nanother little window"
 	endwin
