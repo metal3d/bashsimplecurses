@@ -395,7 +395,7 @@ vumeter(){
 #
 #
 #
-#   progressbar <length> <progress> <max> [color] [bgcolor]
+#   progressbar <progress> <max> [length] [color] [bgcolor]
 #
 progressbar(){
     local done
@@ -405,9 +405,10 @@ progressbar(){
     local max
     local bar
     local modulo
-    len=$1
-    progress=$2
-    max=$3
+    progress=$1
+    max=$2
+    len=${3:-$(( BSC_LASTCOLS - 6 ))}
+    len=$(( len - 2 ))
     
     done=$(( progress * len / max ))
     todo=$(( len - done - 1 ))
