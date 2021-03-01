@@ -61,10 +61,15 @@ main(){
         append "This is a simple\nlittle window"
     endwin
 
-    col_right
+   window "Other window" "blue" "11%"
+       append "And this is\nanother little window"
+       append "`date`"
+   endwin
+   
+   move_up
 
-    window "Other window" "blue" "22%"
-        append "And this is\nanother little window"
-    endwin
+   window "Bottom banner" "green" "100%"
+    append "The last window"
+   endwin
 }
-main_loop
+main_loop "$@"
