@@ -43,4 +43,4 @@ main (){
     done
     endwin
 }
-main_loop 0.5
+main_loop -t 0.5 $@

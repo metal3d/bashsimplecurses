@@ -6,13 +6,26 @@
 #
 source $(dirname $0)/../simple_curses.sh
 declare -a SELECTABLES
-SELECTABLES=( "$@" )
+while [[ $# -gt 0 ]]; do
+  # shellcheck disable=SC2034
+  case "$1" in
+  -- ) shift; break ;;
+  * ) SELECTABLES+=("$1"); shift ;;
+  esac
+done
+# SELECTABLES=( "$@" )
 arraylen=${#SELECTABLES[@]}
 selected=0
 lastselected=$selected
 
 main(){
+    window "Date" "blue" "33%"
+       append "Date is"
+       append "`date`"
+    endwin
+
     window "pick one" "red" "33%" "blue"
+
     local count
     count=0
     for i in ${SELECTABLES[@]};do
@@ -31,15 +44,17 @@ main(){
 update(){
     local ret
     local success
-    #read -n 1 -s -t 1 ret
-    read -n 1 -s ret
-    success=$?
-    read -sN1 -t 0.0001 k1
-    read -sN1 -t 0.0001 k2
-    read -sN1 -t 0.0001 k3
-    ret+=${k1}${k2}${k3}
 
-    [ "$success" == "0" ] && {
+    read -r -n 1 -s -t 1 ret
+    success=$?
+
+    if [ "$success" -lt 128 ]; then
+        if [ "$ret" == $'\e' ];then
+            read -sN2 -r k1
+            success=$?
+            ret+=${k1}
+        fi
+
         case $ret in
             [0-9])
                 selected=$(( $ret - 1 ))
@@ -59,8 +74,9 @@ update(){
                 return $(( $lastselected + 1 ))
             ;;
         esac
-    }
+    fi
 
     return 0
 }
-main_loop update
+
+main_loop "$@"

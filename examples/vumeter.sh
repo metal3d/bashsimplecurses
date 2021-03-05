@@ -20,4 +20,4 @@ update(){
     [ "$progress" -gt "$maxprogress" ] && return 255
     return 0
 }
-main_loop update
+main_loop "$@"
