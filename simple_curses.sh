@@ -647,7 +647,7 @@ General main_loop options:
   -t, --time [t] : Sleep time, in seconds, when no "update" function has been defined, this option is used when calling the "update" function
   -s, --scroll: set presentation to scrolling mode. See "Presentation mode section".
   -q, --quiet: there will be no warning messages at all
-  -v, --verbose: add debug messages after the layout.
+  -V, --verbose: add debug messages after the layout.
 
 Presentation mode:
   The screen is either managed as a static dashboard (default) or scrolling mode. The later enables seeing older displays by scrolling back in the terminal emulator window.
