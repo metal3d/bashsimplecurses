@@ -32,6 +32,11 @@ main (){
     rm -f /dev/shm/deskbar.dmesg
     endwin
 
+    #tail dmesg
+    window "Tail a file " "blue"
+    tail_file /var/log/dmesg "-n 5"
+    endwin
+
     #a special manipulation to get net interfaces and IP
     window "Inet interfaces" "grey"
     _ifaces=$(for inet in `ifconfig | cut -f1 -d " " | sed -n "/./ p"`; do ifconfig $inet | awk 'BEGIN{printf "%s", "'"$inet"'"} /adr:/ {printf ":%s\n", $2}'|sed 's/adr://'; done)
