@@ -172,7 +172,7 @@ backtotoprow () {
     [ $travelback -gt 0 ] && tput cuu $travelback
 }
 
-#Append a window 
+#Append a window
 function window() {
     local title
     local color
@@ -205,7 +205,7 @@ function window() {
         "11" )
         # Window is requested to be displayed in a new column starting from top
     backtotoprow $BSC_COLHGT
-        
+
         BSC_COLLFT=$(( BSC_COLLFT + BSC_COLWIDTH_MAX ))
         BSC_WLFT=$BSC_COLLFT
 
@@ -237,7 +237,7 @@ function window() {
             bsc_cols=$3
         ;;
     esac
-    
+
     if [ "$bsc_cols" -lt 3 ]; then
         echo "Column width of window \"$title\" is too narrow to render (sz=$bsc_cols)." >&2
         exit 1;
@@ -377,6 +377,17 @@ append_file(){
     shift
     append_command "cat $filetoprint" "$@"
 }
+
+#tail text from file and add on current window
+tail_file(){
+    local filetoprint
+    filetoprint=$1
+    shift
+    tail_opts=$1
+    shift
+    append_command "tail $tail_opts $filetoprint" "$@"
+}
+
 #
 #   blinkenlights <text> <color> <color2> <incolor> <bgcolor> <light1> [light2...]
 #
@@ -485,7 +496,7 @@ progressbar(){
     len=$1
     progress=$2
     max=$3
- 
+
     done=$(( progress * len / max ))
     todo=$(( len - done - 1 ))
     modulo=$(( $(date +%s) % 4 ))
@@ -728,7 +739,7 @@ main_loop (){
 
         # Display the buffer
         cat $BSC_BUFFER
-    
+
         [ $VERBOSE -gt 0 ] && [ -f "$BSC_STDERR" ] && cat $BSC_STDERR && rm $BSC_STDERR
 
         $update_fn "$time"
@@ -758,4 +769,3 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     usage
     exit 1
 fi
-

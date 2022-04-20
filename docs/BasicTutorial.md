@@ -1,6 +1,6 @@
 # Basic Introduction #
 
-Bash simple curses is a very simple bash library to create "bash windows" and append texts into. 
+Bash simple curses is a very simple bash library to create "bash windows" and append texts into.
 You only have to know some functions and what to show.
 
 Let's take a look on this little tutorial
@@ -112,6 +112,7 @@ This is the list of commands you can use:
   * **`append "TEXT"`** = append text to the window, be carefull "\n" are not interpreted, you have to append line by line
   * **`append_tabbed "TEXT" COLS SEP`** = As "append" function but TEXT will be displayed as table. You need to give number of cols you will display. SEP is ":" by default
   * **`append_file`** display a file text on window, text is wrapped to fit window
+  * **`tail_file "TAIL_OPTS"`** tail a file text or pipe to window, text is wrapped to fit window
   * **`append_command`** Execute command and display result on window
   * **`addsep`** = Append a separator
   * **`main_loop SEC`** = run loop every SEC second, default is 1 second
