@@ -4,13 +4,13 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses?ref=badge_shield)
                 
 
-"Bash simple curses" give you some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
+Bash Simple Curses gives you some basic functions to quickly create windows on your terminal.
 
-An example is given: bashbar. Bashbar is a monitoring bar that you can integrate in tiling desktop (Xmonad, WMii...)
+An example is given: bashbar. Bashbar is a monitoring bar that you can integrate into tiling window managers.
 
-The goal of Bash Simple Curses is not done (not yet) to create very complete windows. It is only done to create some colored windows and display informations into.
+The (unfinished) goal of Bash Simple Curses is to create very complete windows. It is only done to create colored windows and display information into.
 
-To use library, you have to import library "simple_curses.sh" into you bash script:
+To use this library, you have to import "simple_curses.sh" into your bash script, like so:
 
 ```bash
 
@@ -32,9 +32,9 @@ main (){
 main_loop 1
 ```
 
-That's all... 
+That's all.
 
-Go into the project to have documentation about functions: 
+Visit the repository's documentation to learn about functions: 
 https://github.com/metal3d/bashsimplecurses
 
 
