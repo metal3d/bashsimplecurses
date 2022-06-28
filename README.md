@@ -8,7 +8,7 @@ Bash Simple Curses gives you some basic functions to quickly create windows on y
 
 An example is given: bashbar. Bashbar is a monitoring bar that you can integrate into tiling window managers.
 
-The (unfinished) goal of Bash Simple Curses is to create very complete windows. It is only done to create colored windows and display information into.
+The (unfinished) goal of Bash Simple Curses is to create windows. It is only done to create colored windows and display information into.
 
 To use this library, you have to import "simple_curses.sh" into your bash script, like so:
 
@@ -20,15 +20,15 @@ To use this library, you have to import "simple_curses.sh" into your bash script
 #source /usr/lib/simple_curses.sh
 source /usr/local/lib/simple_curses.sh
 
-#Then, you must create a "main" function:
-main (){
-    #your code here, you can add some windows, text...
+# You must create a "main" function:
+main () {
+    # Your code here, here we add some windows and text
     window "title" "color"
     append "Text..."
     endwin
 }
 
-#then, you can execute loop:
+# Then, execute the loop
 main_loop 1
 ```
 
