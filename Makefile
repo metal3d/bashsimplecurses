@@ -6,31 +6,31 @@ VERSION=1.4
 
 
 all: test
-	@echo "If no error, you can now run make install"
+	@echo "If no error was displayed, you can run 'make install'"
 
 help:
 	@echo ""
 	@echo "Usage: make [test|install|uninstall] [LIBDIR=path]"
 	@echo ""
-	@echo "Try make test. If everything is ok, you can run make install as root"
+	@echo "Try make test. If everything is OK, run 'make install' as root."
 	@echo "You can set LIBDIR to a valid directory. Default is $(LIBDIR)"
 	@echo ""
-	@echo "You can remove installation using make uninstall as root"
+	@echo "You can uninstall Bash Simple Curses by running 'make uninstall' as root."
 	@echo ""
 
 install:
-	@echo "Install..."
+	@echo "Installing..."
 	@mkdir -p $(LIBDIR)
 	install -m655 simple_curses.sh $(LIBDIR)/simple_curses.sh
 	@echo "done"
 
 uninstall:
-	@echo "Removing library"
+	@echo "Removing..."
 	rm -rf $(LIBDIR)/simple_curses.sh
 	@echo "done"
 
 test:
-	@echo "Check if img2txt is installed"
+	@echo "Checking if img2txt is installed"
 	@which img2txt > /dev/null && echo -e "\033[32mOk\033[0m - you can use img2txt command to display images on window" || echo -e "\033[33mWarning\033[0m - You should install caca-utils or img2txt command"
 
 dist:
