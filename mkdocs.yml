@@ -1,6 +1,6 @@
-site_name: Bash simple curses
+site_name: Bash Simple Curses
 theme: readthedocs
 pages:
 - [index.md]
 - [BasicTutorial.md, "Tutorial"]
-- [HowItWorks.md, "How does it works"]
+- [HowItWorks.md, "How it works"]
