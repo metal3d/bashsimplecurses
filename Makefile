@@ -12,7 +12,7 @@ help:
 	@echo ""
 	@echo "Usage: make [test|install|uninstall] [LIBDIR=path]"
 	@echo ""
-	@echo "Try make test. If everything is OK, run 'make install' as root."
+	@echo "Run 'make test'. If everything is OK, run 'make install' as root."
 	@echo "You can set LIBDIR to a valid directory. Default is $(LIBDIR)"
 	@echo ""
 	@echo "You can uninstall Bash Simple Curses by running 'make uninstall' as root."
