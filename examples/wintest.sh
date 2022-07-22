@@ -8,7 +8,7 @@ main(){
         append_command "cal"
         endwin
 
-        window "Tree files" "gree" "33%"
+        window "Tree files" "green" "33%"
         if [[ -x `which tree 2> /dev/null` ]]; then
             append_command "tree -L 2 -C -A ./"
         else
