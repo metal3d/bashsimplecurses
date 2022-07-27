@@ -16,8 +16,6 @@ So, we need an easy and useful library to quickly create this kind of views insi
 
 Bashbar is the given example that shows system information. You only have to resize your terminal window and place it on the left or on the right. This screenshot is made on Xmonad:
 
-*The screenshot provided before this commit just gives a 404.*
-
 This is how it's implemented:
 
 ```bash
@@ -66,8 +64,6 @@ main_loop 1
 # Another Example #
 
 This capture shows you that you can do whatever you want with Bash Simple Curses:
-
-*Again, the screenshot provided before this commit just gives a 404.*
 
 Code is:
 
@@ -119,7 +115,5 @@ main_loop
 # Other cool ideas #
 
 With `img2txt` from the libcaca library, you can do something like this:
-
-*Once again, the screenshot provided before this commit just gives a 404.*
 
 Cool, isn't it?
