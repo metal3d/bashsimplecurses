@@ -1,34 +1,35 @@
 # Basic Introduction #
 
-Bash simple curses is a very simple bash library to create "bash windows" and append texts into.
+Bash Simple Curses is a very simple Bash library to create "bash windows" and append texts into.
 You only have to know some functions and what to show.
 
-Let's take a look on this little tutorial
+Let's take a look at this little tutorial.
 
 # Importing bash functions #
 
-Create a directory where we will work. For example
+Create a directory where we will work. For example:
 
 ```bash
 mkdir -p ~/tutorial/bashcurses
 ```
 
-Get bashsimplecurses sources from github.
+Clone the Bash Simple Curses GitHub repository.
 
 ```bash
 cd ~/tutorial/bashcurses
 git clone git@github.com:metal3d/bashsimplecurses.git
 ```
 
-Now, create a tutorial.sh script and edit it, you can use vim, gedit, nano...:
+Now, create a tutorial.sh script and edit it with your favourite editor:
 
 ```bash
 touch tutorial.sh
 #vim tutorial.sh
-#or nano tutorial.sh
+#nano tutorial.sh
+editor tutorial.sh
 ```
 
-It's ok, then you can add this:
+Now, add this:
 
 ```bash
 #!/bin/bash
@@ -42,11 +43,11 @@ main(){
    append "It's the content of my window"
    endwin
 }
-#then ask the standard loop
+#then call the standard loop
 main_loop
 ```
 
-Save your work. Now, you only have to set this script "executable"
+Save your work. Now, you have to make the script executable:
 
 ```bash
 chmod +x ~/tutorial/bashcurses/tutorial.sh
@@ -57,7 +58,7 @@ Now, you can try:
 ~/tutorial/bashcurses/tutorial.sh
 ```
 
-And a window appeaars ! To close your script, you only have to kill or press CTRL+C
+And a window appeaars! To close your script, you only have to kill the process, or press CTRL+C.
 
 ![http://www.metal3d.org/captures/bashsimplecurses/tuto1.png](http://www.metal3d.org/captures/bashsimplecurses/tuto1.png)
 
@@ -70,7 +71,7 @@ You can specify colors for titles. For example, change line on tutorial like thi
    window "Title of my window" "red"
 ```
 
-Restart your script, and the title is red.
+Now restart your script, and the title is red.
 
 ![http://www.metal3d.org/captures/bashsimplecurses/tuto2.png](http://www.metal3d.org/captures/bashsimplecurses/tuto2.png)
 
@@ -94,27 +95,27 @@ By default, windows take 100% of terminal width. You can specify number of cols 
    window "Title of my window" "red" 36
 ```
 
-This will set the width to 36 caracters (cols).
+This will set the width of the window to 36 characters.
 
-You may use percent:
+You can also use a percentage:
 
 ```
 window "Title of my window" "red" "50%"
 ```
 
-and the window takes 50% of the terminal width
+and now, the window takes up 50% of the terminal width.
 
 ## Functions reference ##
 
-This is the list of commands you can use:
+This is a list of commands you can use:
 
-  * **`window "TITLE" "COLOR" WIDTH`** = create a window with title, color and width
-  * **`append "TEXT"`** = append text to the window, be carefull "\n" are not interpreted, you have to append line by line
-  * **`append_tabbed "TEXT" COLS SEP`** = As "append" function but TEXT will be displayed as table. You need to give number of cols you will display. SEP is ":" by default
-  * **`append_file`** display a file text on window, text is wrapped to fit window
-  * **`tail_file "TAIL_OPTS"`** tail a file text or pipe to window, text is wrapped to fit window
-  * **`append_command`** Execute command and display result on window
-  * **`addsep`** = Append a separator
-  * **`main_loop SEC`** = run loop every SEC second, default is 1 second
+  * **`window "TITLE" "COLOR" WIDTH`**: Create a window with title, color and width.
+  * **`append "TEXT"`**: Append text to the window. Be careful, newline characters (`\n`) are not interpreted, you'll have to append line by line.
+  * **`append_tabbed "TEXT" COLS SEP`**: This is similar to the `append` function, but `TEXT` will be displayed as a table. You'll need to give the number of characters you will display. SEP is ":" by default.
+  * **`append_file`**: Display text from a file on a window. Text is wrapped to fit window.
+  * **`tail_file "TAIL_OPTS"`**: `tail` text from a file or pipe to a window. Text is wrapped to fit window.
+  * **`append_command`**: Execute a command and display the result on a window.
+  * **`addsep`**: Append a separator.
+  * **`main_loop SEC`**: Run a loop every SEC second, the default is 1 second.
 
-That's all folks !
+That's all folks!

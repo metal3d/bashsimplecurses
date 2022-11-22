@@ -1,19 +1,15 @@
 
-Command lines begining by "$" are executed as normal user. Command lines with "#" are executed as root.
+Commands beginning with a "$" are executed as a standard user. Commands beginnning with a "#" have to be executed as root.
 
 
 Help can be shown with:
 $ make help
 
-To install bashsimplecurses, you could try
+To install Bash Simple Curses, run
 $ make install
 
-Then, if no error, you should do as root:
-$ su -
+Then, if no error appeared, run the same command as root:
 # make install
 
 To uninstall:
-$ su -
 # make uninstall
-
-

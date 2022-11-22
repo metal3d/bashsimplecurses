@@ -1,24 +1,24 @@
 # The simple way #
 
-"Bash simple curses" provides some basic functions to quickly create some windows on you terminal as Xterm, aterm, urxvt...
+Bash Simple Curses gives you some basic functions to quickly create windows on your terminal.
 
-An example is given: bashbar that is a monitoring bar you can integrate in tiling desktop (Xmonad, WMii...).
+An example is given: bashbar. Bashbar is a monitoring bar that you can integrate into tiling window managers.
 
-The goal of Bash Simple Curses is not creating very complete windows. It is only made to create some colored windows and display informations into.
+The (unfinished) goal of Bash Simple Curses is to create very complete windows. It is only made to create colored windows and display information into.
 
-# Why ? #
+# Why? #
 
-Bash is very comple and has a great ecosystem, there are commands to do whatever you want. With curses you can create a little bar to display informations each second, you can change an output command to display a report...
+Bash is very complete and has a great ecosystem; there are commands to do whatever you want. With `curses` you can create a little bar to display information each second, or you can change an output command to display a report, etc.
 
-So, we need an easy and usefull library to quickly create this kind of views. This is why you can try Bash Simple Curses.
+We need a simple and useful library to quickly create these kind of views inside of Bash. This is why Bash Simple Curses exists.
 
-# Example: the bashbar #
+# Example: bashbar #
 
-Bash bar is the given example that show system informations. You only have to resize your terminal window and place it on left or right. This screenshot is made on Xmonad:
+Bashbar is the given example that shows system information. You only have to resize your terminal window and place it on the left or on the right. This screenshot is made on Xmonad:
 
 ![http://www.metal3d.org/captures/bashsimplecurses/bashbar.png](http://www.metal3d.org/captures/bashsimplecurses/bashbar.png)
 
-It's implemented this way:
+This is how it's implemented:
 
 ```bash
 #!/bin/bash
@@ -39,7 +39,7 @@ main (){
     append_tabbed `cat /proc/meminfo | awk '/MemFree/ {print "Used:" $2/1024}'` 2
     endwin
 
-    window "Processus taking memory and CPU" "green"
+    window "Processes taking memory and CPU" "green"
     for i in `seq 2 6`; do
         append_tabbed "`ps ax -o pid,rss,pcpu,ucmd --sort=-cpu,-rss | sed -n "$i,$i p" | awk '{printf "%s: %smo:  %s%%" , $4, $2/1024, $3 }'`" 3
     done
@@ -63,13 +63,13 @@ main (){
 main_loop 1
 ```
 
-# Another Example #
+# Another example #
 
-this capture shows you that you can do whatever you want:
+This picture shows you that you can do whatever you wish with Bash Simple Curses:
 
 ![http://www.metal3d.org/captures/bashsimplecurses/bashcurses.png](http://www.metal3d.org/captures/bashsimplecurses/bashcurses.png)
 
-Code is:
+Code:
 
 ```bash
 #!/bin/bash
@@ -116,10 +116,10 @@ main(){
 main_loop
 ```
 
-# Some other cool stuffs #
+# Other cool ideas #
 
-And just with libcaca "img2txt" command, you can have fun:
+With `img2txt` from the libcaca library, you can do something like this:
 
 ![http://www.metal3d.org/captures/bashsimplecurses/bashcurses_windows.png](http://www.metal3d.org/captures/bashsimplecurses/bashcurses_windows.png)
 
-Cool, isn't it ?
+Cool, isn't it?
