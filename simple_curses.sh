@@ -34,7 +34,8 @@ bsc_create_buffer(){
         #mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
         mktemp ${BUFFER_DIR}/${buffername}.XXXXXXXXXX
     else
-        echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
+        rand=`LC_ALL=C tr -dc '[[:alnum:]]' < /dev/urandom | head -c 10`
+        echo "${BUFFER_DIR}/bashsimplecurses.$rand"
     fi
 }
 
