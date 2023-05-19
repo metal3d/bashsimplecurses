@@ -253,8 +253,7 @@ function window() {
     contentLen=${#BSC_LINEBODY}
     BSC_LINEBODY=${BSC_LINEBODY// /$_HLINE}
 
-    local len
-    len=${#title}
+    local len=${#title}
 
     if [ $BSC_TITLECROP -eq 1 ] && [ "$len" -gt "$contentLen" ]; then
         title="${title:0:$contentLen}"
@@ -543,8 +542,7 @@ bsc__multiappend(){
     clean_line
     tput sc
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
 
     params=( "$@")
@@ -574,8 +572,7 @@ bsc__append(){
     clean_line
     tput sc
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
 
     [[ "$2" == "left" ]] && bsc_left=0
@@ -598,8 +595,7 @@ append_tabbed(){
     clean_line
 
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     cell_wdt=$((BSC_COLWIDTH/$2))
 
     setcolor $4
