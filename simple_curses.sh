@@ -231,7 +231,7 @@ function window() {
             # No witdh given
         ;;
         *% )
-            w=$(echo $3 | sed 's/%//')
+            w=${3/%}
             bsc_cols=$((w*bsc_cols/100))
         ;;
         * )
