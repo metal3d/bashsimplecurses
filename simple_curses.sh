@@ -644,7 +644,7 @@ endwin(){
 
 function usage() {
     script_name=$(basename "$0")
-  cat <<EOF
+read -d '' <<EOF
 Usage: $script_name [options]
 
 Displays windows in a layout using commands. User defines a "main" function, then calls this script main loop. The current help presents the options of the main loop function, presentation mode and layout usage.
@@ -675,6 +675,8 @@ Layout usage:
   See examples, especially wintest.sh to see all possible usages.
 
 EOF
+
+printf '%s' "$REPLY"
 }
 
 parse_args (){
