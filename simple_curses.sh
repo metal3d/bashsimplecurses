@@ -767,7 +767,7 @@ main_loop (){
         fi
 
         sigint_check
-        [ $BSC_ONESHOT -eq 1 ] && break
+        [ $BSC_ONESHOT -eq 1 ] && clean_env && break
     done
 }
 # Calls to this function are placed so as to avoid stdout mangling
