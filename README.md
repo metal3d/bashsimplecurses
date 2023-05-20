@@ -28,8 +28,8 @@ main () {
     endwin
 }
 
-# Then, execute the loop
-main_loop 1
+# Then, execute the loop every second ( -t 1 => 1s)
+main_loop -t 1
 ```
 
 That's all.
