@@ -42,6 +42,7 @@ bsc_create_buffer(){
 #Usefull variables
 BSC_BUFFER=$(bsc_create_buffer)
 BSC_STDERR=$(bsc_create_buffer stderr)
+BSC_ONESHOT=0
 
 reset_layout() {
     BSC_COLLFT=0
@@ -657,6 +658,7 @@ Usage: $script_name [options]
   -t,  --time [t]   Sleep time, in seconds, when no "update" function has
                     been defined, this option is used when calling the 
                     "update" function
+  --one-shot        Do not loop, just display once and exit
   -s,  --scroll     Set presentation to scrolling mode.
   -q,  --quiet      There will be no warning messages at all
   -V,  --verbose    Append debug messages after the layout
@@ -707,6 +709,7 @@ parse_args (){
         -q  | --quiet)      VERBOSE=0; shift 1 ;;
         -s  | --scroll)     BSC_MODE=scroll; shift 1 ;;
         -t  | --time)       time=$2; shift 2 ;;
+        --one-shot)         BSC_ONESHOT=1; shift 1 ;;
         -V  | --verbose)    VERBOSE=2; shift 1 ;;
         --)                 return 0 ;;
         *)                  echo "Option $1 does not exist"; exit 1;;
@@ -764,6 +767,7 @@ main_loop (){
         fi
 
         sigint_check
+        [ $BSC_ONESHOT -eq 1 ] && break
     done
 }
 # Calls to this function are placed so as to avoid stdout mangling
