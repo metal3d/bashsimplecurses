@@ -2,8 +2,11 @@ SHELL=bash
 PREFIX ?= /usr/local
 LIBDIR ?= $(DESTDIR)$(PREFIX)/lib
 
-VERSION=1.4
+CUR_SHA=$(shell git log -n1 --pretty='%h')
+CUR_BRANCH=$(shell git branch --show-current)
+VERSION=$(shell git describe --exact-match --tags $(CUR_SHA) 2>/dev/null || echo $(CUR_BRANCH)-$(CUR_SHA))
 
+.PHONY: help test install uninstall dist
 
 all: test
 	@echo "If no error was displayed, you can run 'make install'"
@@ -34,11 +37,15 @@ test:
 	@which img2txt > /dev/null && echo -e "\033[32mOk\033[0m - you can use img2txt command to display images on window" || echo -e "\033[33mWarning\033[0m - You should install caca-utils or img2txt command"
 
 dist:
-	rm -rf ./bashsimplecurses-$(VERSION)
-	mkdir ./bashsimplecurses-$(VERSION)
-	cp README.md README
-	cp LICENSE README AUTHORS INSTALL simple_curses.sh Makefile ./bashsimplecurses-$(VERSION)
-	tar cvfz bashsimplecurses-$(VERSION).tar.gz ./bashsimplecurses-$(VERSION)
-	rm -rf ./bashsimplecurses-$(VERSION)
-	@echo "bashsimplecurses-$(VERSION).tar.gz done"
-	rm -f README
+	@mkdir -p dist
+	@rm -rf ./dist/bashsimplecurses-$(VERSION) ./dist/bashsimplecurses-$(VERSION).tar.gz
+	@mkdir ./dist/bashsimplecurses-$(VERSION)
+	@cp README.md README
+	@echo $(VERSION) > ./dist/bashsimplecurses-$(VERSION)/VERSION
+	@cp LICENSE README AUTHORS INSTALL simple_curses.sh Makefile ./dist/bashsimplecurses-$(VERSION)
+	@sed -i 's/VERSION="dev"/VERSION="$(VERSION)"/g' ./dist/bashsimplecurses-$(VERSION)/simple_curses.sh
+	@tar cvfz bashsimplecurses-$(VERSION).tar.gz ./dist/bashsimplecurses-$(VERSION) >/dev/null
+	@cp bashsimplecurses-$(VERSION).tar.gz ./dist
+	@rm -rf ./dist/bashsimplecurses-$(VERSION)
+	@echo "./dist/bashsimplecurses-$(VERSION).tar.gz done"
+	@rm -f README
