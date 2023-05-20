@@ -15,6 +15,7 @@
 #support for delay loop function (instead of sleep,
 #enabling keyboard input) by Markus Mikkolainen
 
+VERSION="dev"
 
 bsc_create_buffer(){
     # Try to use SHM, then $TMPDIR, then /tmp
@@ -660,6 +661,9 @@ Usage: $script_name [options]
   -s,  --scroll     Set presentation to scrolling mode.
   -q,  --quiet      There will be no warning messages at all
   -V,  --verbose    Append debug messages after the layout
+  --version         Displays script version (${VERSION})
+
+Note: this script is intended to be sourced by another script, not executed.
 
 EOF
 
@@ -701,6 +705,7 @@ parse_args (){
     while [[ $# -gt 0 ]]; do
         # shellcheck disable=SC2034
         case "$1" in
+        --version)          echo "$VERSION"; exit 0 ;;
         -c  | --crop)       BSC_TITLECROP=1; shift 1 ;;
         -hh | --more-help)  usage 2; exit 0 ;;
         -h  | --help)       usage; exit 0 ;;
@@ -778,8 +783,6 @@ sigint_check (){
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    echo "This file is a library not meant to be run. Source it in a main script."
-    echo ""
     parse_args $@
     usage
     exit 1
