@@ -231,7 +231,7 @@ function window() {
             # No witdh given
         ;;
         *% )
-            w=${3/%}
+            w=${3/'%'}
             bsc_cols=$((w*bsc_cols/100))
         ;;
         * )
