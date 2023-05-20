@@ -34,7 +34,8 @@ bsc_create_buffer(){
         #mktemp --tmpdir=${BUFFER_DIR} ${buffername}.XXXXXXXXXX
         mktemp ${BUFFER_DIR}/${buffername}.XXXXXXXXXX
     else
-        echo "${BUFFER_DIR}/bashsimplecurses."$RANDOM
+        rand=`LC_ALL=C tr -dc '[[:alnum:]]' < /dev/urandom | head -c 10`
+        echo "${BUFFER_DIR}/bashsimplecurses.$rand"
     fi
 }
 
@@ -230,7 +231,7 @@ function window() {
             # No witdh given
         ;;
         *% )
-            w=$(echo $3 | sed 's/%//')
+            w=${3/%}
             bsc_cols=$((w*bsc_cols/100))
         ;;
         * )
@@ -252,8 +253,7 @@ function window() {
     contentLen=${#BSC_LINEBODY}
     BSC_LINEBODY=${BSC_LINEBODY// /$_HLINE}
 
-    local len
-    len=${#title}
+    local len=${#title}
 
     if [ $BSC_TITLECROP -eq 1 ] && [ "$len" -gt "$contentLen" ]; then
         title="${title:0:$contentLen}"
@@ -542,8 +542,7 @@ bsc__multiappend(){
     clean_line
     tput sc
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
 
     params=( "$@")
@@ -573,8 +572,7 @@ bsc__append(){
     clean_line
     tput sc
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
 
     [[ "$2" == "left" ]] && bsc_left=0
@@ -597,8 +595,7 @@ append_tabbed(){
     clean_line
 
     echo -ne $_VLINE
-    local len
-    len=$(wc -c < <(echo -n "$1"))
+    local len=${#1}
     cell_wdt=$((BSC_COLWIDTH/$2))
 
     setcolor $4
@@ -647,7 +644,7 @@ endwin(){
 
 function usage() {
     script_name=$(basename "$0")
-  cat <<EOF
+read -d '' <<EOF
 Usage: $script_name [options]
 
 Displays windows in a layout using commands. User defines a "main" function, then calls this script main loop. The current help presents the options of the main loop function, presentation mode and layout usage.
@@ -678,6 +675,8 @@ Layout usage:
   See examples, especially wintest.sh to see all possible usages.
 
 EOF
+
+printf '%s' "$REPLY"
 }
 
 parse_args (){
