@@ -2,5 +2,4 @@ site_name: Bash Simple Curses
 theme: readthedocs
 nav:
 - Home: index.md
-- Tutorial: BasicTutorial.md
-- "How does it work?": HowItWorks.md
+- Functions reference: functions_reference.md
