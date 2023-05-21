@@ -1,12 +1,15 @@
 # Functions reference
 
+For each of the following function, the order of the arguments is important.
+
 ## `window` + `endwind`
 
 **Arguments:**
 
 - title: string
-- color: string (optional)
+- fgcolor: string (optional)
 - width: int or string (optional)
+- bgcolor: string (optional)
 
 Create a window with title, color and width. You **must** end the window by `endwin`
 E.g.

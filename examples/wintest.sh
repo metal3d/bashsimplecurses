@@ -72,4 +72,4 @@ main(){
     append "The last window"
    endwin
 }
-main_loop "$@"
+main_loop -t 1 "$@"
