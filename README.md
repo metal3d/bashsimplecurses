@@ -1,6 +1,6 @@
 # Bash Simple Curses
 
-[![Documentation Status](https://readthedocs.org/projects/bashsimplecurses/badge/?version=latest)](https://readthedocs.org/projects/bashsimplecurses/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/bashsimplecurses/badge/?version=master)](https://bashsimplecurses.readthedocs.io/en/master/?badge=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses?ref=badge_shield)
                 
 
