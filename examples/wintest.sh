@@ -6,9 +6,9 @@ main(){
         append "First simple window"
         addsep
         append_command "cal"
-        endwin
+    endwin
 
-        window "Tree files" "green" "33%"
+    window "Tree files" "green" "33%"
         if [[ -x `which tree 2> /dev/null` ]]; then
             append_command "tree -L 2 -C -A ./"
         else
@@ -20,8 +20,8 @@ main(){
     move_up
 
     window "Test 2" "red" "33%"
-        append "Multiline is allowed !!!\nLike this :)"
-        append "This is a new col here."
+        append "Multiline is allowed.\nLike this :)"
+        append "This is a new column here."
     endwin
 
     window "Test 3" "red" "33%"
@@ -61,15 +61,16 @@ main(){
         append "This is a simple\nlittle window"
     endwin
 
-   window "Other window" "blue" "11%"
-       append "And this is\nanother little window"
-       append "`date`"
-   endwin
-   
-   move_up
+    col_right
+    window "Other window" "blue" "23%"
+        append "And this is\nanother little window"
+        append "`date`"
+    endwin
 
-   window "Bottom banner" "green" "100%"
-    append "The last window"
-   endwin
+    move_up
+
+    window "Bottom banner" "green" "100%"
+        append "The last window"
+    endwin
 }
-main_loop -t 1 "$@"
+main_loop "$@"

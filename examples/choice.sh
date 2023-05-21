@@ -45,6 +45,9 @@ update(){
     local ret
     local success
 
+    # using "-t 1", we can wait for one second for input
+    # if a key is pressed, we read it and so we refresh the window
+    # So, no need to use "sleep" command :)
     read -r -n 1 -s -t 1 ret
     success=$?
 
