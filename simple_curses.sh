@@ -690,11 +690,11 @@ Displays windows in a layout using commands. User defines a "main" function, the
 
 Presentation mode:
 ==================
-  The screen is either managed as a static dashboard (default) or scrolling mode. The later enables seeing older displays by scrolling back in the terminal emulator window.
+  The screen is either managed as a static dashboard (default) or scrolling mode. The latter enables seeing older displays by scrolling back in the terminal emulator window.
   In static mode, the window is cleared and the layout is reset to top left corner.
   In scrolling mode, the window is not cleared and the layout is just reset to the left border, leaving older display available for reading.
-  Some window, like progress bar, loose their interest in scrolling mode, but are compatible.
-  In scrolling mode, new layout starts under the previous one. There is no screen clearing. In default, dashboard mode, the cursor is placed at the top left corner.
+  Some windows, like progress bar, loose their interest in scrolling mode, but are compatible.
+  In scrolling mode, new layout starts under the previous one. There is no screen clearing. In default mode (dashboard mode), the cursor is placed at the top left corner.
 
 Layout usage:
 =============
