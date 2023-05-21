@@ -16,7 +16,7 @@ To use this library, you have to import "simple_curses.sh" into your bash script
 
 #!/bin/bash
 
-#import library, please check path
+# import library, please check path
 #source /usr/lib/simple_curses.sh
 source /usr/local/lib/simple_curses.sh
 
@@ -39,7 +39,7 @@ That's all.
 
 ```bash
 #!/bin/bash
-source ../simple_curses.sh
+source simple_curses.sh
 
 main(){
     # create a window
@@ -67,6 +67,27 @@ main_loop
 ![Simple example](docs/images/bsc-example.png)
 
 
+## Install
+
+There are several possibilities to use the library. We recommend to copy `simple_curses.sh` inside your project and to "source" it.
+
+But, if you want to make it available for the entire system, or for local user, you can use the `make install` command:
+
+```bash
+# install inside the system
+# in /usr/local/lib
+sudo make install
+
+# for local user, no need to use sudo, but change the PREFIX
+make install PREFIX=~/.local/lib
+```
+
+You can then uninstall the library file:
+
+```bash
+sudo make uninstall
+make uninstall PREFIX=~/.loca/bin
+```
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmetal3d%2Fbashsimplecurses?ref=badge_large)

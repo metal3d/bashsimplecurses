@@ -1,15 +1,16 @@
-
-Commands beginning with a "$" are executed as a standard user. Commands beginnning with a "#" have to be executed as root.
-
-
-Help can be shown with:
-$ make help
+Installation:
 
 To install Bash Simple Curses, run
-$ make install
+$ sudo make install
 
-Then, if no error appeared, run the same command as root:
-# make install
+Or to install it as a standard user
+$ make install PREFIX=~/.local/lib
 
-To uninstall:
-# make uninstall
+
+Uninstall:
+
+You can uninstall the same way:
+$ sudo make uninstall
+
+As a standard user:
+$ make uninstall PREFIX=./local/lib
