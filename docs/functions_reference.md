@@ -29,6 +29,25 @@ endwin
 
 Append text to the window. Be careful, newline characters (`\n`) are not interpreted, you'll have to append line by line.
 
+```bash
+main() {
+    window "Example"
+    append "Hello World :)"
+    append "This is a test"
+    endwin
+}
+```
+
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│                                  Example                                  │
+├───────────────────────────────────────────────────────────────────────────┤
+│                              Hello World :)                               │
+│                              This is a test                               │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+
 ## `append_tabbed`
 
 **Arguments:**
@@ -48,6 +67,32 @@ append_tabbed "Content 1:Content 2:Other content" 3
 append_tabbed "Content 1:Content 2:Other content" 3 ":"
 ```
 
+```bash
+#!/bin/bash
+source ../simple_curses.sh
+
+main() {
+    window "Example of tabbed values"
+        append_tabbed "Content 1:Content 2:Other content" 3
+        append_tabbed "Other line:Content 3:Other content 4" 3
+    endwin
+}
+main_loop
+```
+
+```
+┌───────────────────────────────────────────────────────────────────────────┐
+│                         Example of tabbed values                          │
+├───────────────────────────────────────────────────────────────────────────┤
+│Content 1                Content 2                Other content            │
+│Other line               Content 3                Other content 4          │
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+
+Note that the `cols` argument will define the number of columns to display. If the number of elements is greater, so a new line is displayed.
+
+
 ## `append_file`
 
 **Arguments:**
@@ -56,15 +101,6 @@ append_tabbed "Content 1:Content 2:Other content" 3 ":"
 
 Display text from a file on a window. Text is wrapped to fit window.
 
-## `tail_file`
-
-**Arguments:**
-
-- filename: string
-
-`tail` text from a file or pipe to a window. Text is wrapped to fit window.
-
-> This function accepts any tail options after the filename
 
 ## `append_command`
 
@@ -78,6 +114,15 @@ Execute a command and display the result.
 
 Append an horizontal separator.
 
+## `tail_file`
+
+**Arguments:**
+
+- filename: string
+
+`tail` text from a file or pipe to a window. Text is wrapped to fit window.
+
+> This function accepts any tail options after the filename
 
 # Special functions
 

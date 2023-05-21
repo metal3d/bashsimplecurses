@@ -3,3 +3,4 @@ theme: readthedocs
 nav:
 - Home: index.md
 - Functions reference: functions_reference.md
+- Tips and tricks: tips.md
