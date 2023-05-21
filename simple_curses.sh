@@ -167,8 +167,8 @@ backtotoprow () {
     nbrows=$(tput lines)
     scrollback=$(( travelback -nbrows ))
     if [ $scrollback -gt 0 ]; then
-    #    tput rin $scrollback
-    #    travelback=$(( travelback - scrollback ))
+        #    tput rin $scrollback
+        #    travelback=$(( travelback - scrollback ))
         echo "Warning: Current layout is exceeding terminal size. This will break window top alignment. Increase terminal height/reduce window content for proper rendering." >&2
     fi
     [ $travelback -gt 0 ] && tput cuu $travelback
@@ -188,37 +188,37 @@ function window() {
     # Manage new window position
     case "$BSC_NEWWIN_TOP_REQ$BSC_NEWWIN_RGT_REQ" in
         "00" )
-        # Window is requested to be displayed under the previous one
-        ;;
+            # Window is requested to be displayed under the previous one
+            ;;
         "01" )
-        # Window is requested to be displayed to the right of the last one
+            # Window is requested to be displayed to the right of the last one
 
-        BSC_WLFT=$(( BSC_WLFT + BSC_COLWIDTH ))
-        [ $BSC_WLFT -gt 0 ] && tput cuf $(( BSC_WLFT + BSC_COLWIDTH ))
-    backtotoprow $BSC_WNDHGT
-        BSC_COLHGT=$(( BSC_COLHGT - BSC_WNDHGT))
-        ;;
+            BSC_WLFT=$(( BSC_WLFT + BSC_COLWIDTH ))
+            [ $BSC_WLFT -gt 0 ] && tput cuf $(( BSC_WLFT + BSC_COLWIDTH ))
+            backtotoprow $BSC_WNDHGT
+            BSC_COLHGT=$(( BSC_COLHGT - BSC_WNDHGT))
+            ;;
         "10" )
-        # Window is requested to be displayed overwriting the ones above (??!??)
-        # Instead, we reset the layout, enabling more possibilities
-        tput cud $(( BSC_COLHGT_MAX - BSC_COLBOT ))
-        reset_layout
-        ;;
+            # Window is requested to be displayed overwriting the ones above (??!??)
+            # Instead, we reset the layout, enabling more possibilities
+            tput cud $(( BSC_COLHGT_MAX - BSC_COLBOT ))
+            reset_layout
+            ;;
         "11" )
-        # Window is requested to be displayed in a new column starting from top
-    backtotoprow $BSC_COLHGT
+            # Window is requested to be displayed in a new column starting from top
+            backtotoprow $BSC_COLHGT
 
-        BSC_COLLFT=$(( BSC_COLLFT + BSC_COLWIDTH_MAX ))
-        BSC_WLFT=$BSC_COLLFT
+            BSC_COLLFT=$(( BSC_COLLFT + BSC_COLWIDTH_MAX ))
+            BSC_WLFT=$BSC_COLLFT
 
-        BSC_COLHGT=0
-        BSC_COLBOT=0
-        BSC_COLWIDTH_MAX=0
-        ;;
+            BSC_COLHGT=0
+            BSC_COLBOT=0
+            BSC_COLWIDTH_MAX=0
+            ;;
         * )
-        echo "Unexpected window position requirement"
-        clean_env
-        exit 1
+            echo "Unexpected window position requirement"
+            clean_env
+            exit 1
     esac
 
     # Reset window position mechanism for next window
@@ -230,14 +230,14 @@ function window() {
     case $3  in
         "" )
             # No witdh given
-        ;;
+            ;;
         *% )
             w=${3/'%'}
             bsc_cols=$((w*bsc_cols/100))
-        ;;
+            ;;
         * )
             bsc_cols=$3
-        ;;
+            ;;
     esac
 
     if [ "$bsc_cols" -lt 3 ]; then
@@ -432,30 +432,27 @@ blinkenlights(){
 #   vumeter <text> <width> <value> <max> [color] [color2] [inactivecolor] [bgcolor]
 #
 vumeter(){
+    local text=$1
+    local value=$3
+    local len=$2
+    local max=$4
+    local okcolor=$5
+    local overcolor=$6
+    local incolor=$7
+
     local done
     local todo
     local over
-    local len
-    local max
-
     local green
     local red
     local rest
 
-    local incolor
-    local okcolor
-    local overcolor
-    text=$1
-    len=$2
-    value=$3
-    max=$4
     len=$(( len - 2 ))
-    incolor=$7
-    okcolor=$5
-    overcolor=$6
+
     [ "$incolor" == "" ] && incolor="grey"
     [ "$okcolor" == "" ] && okcolor="green"
     [ "$overcolor" == "" ] && overcolor="red"
+
 
     done=$(( value * len / max  + 1 ))
     todo=$(( len - done - 1))
@@ -464,6 +461,7 @@ vumeter(){
         over=$(( done - ( len * 2 /3 )))
         done=$(( len * 2 / 3 ))
     }
+
     green=""
     red=""
     rest=""
@@ -471,13 +469,16 @@ vumeter(){
     for i in `seq 1 $(($done))`;do
         green="${green}|"
     done
+
     for i in `seq 0 $(($over))`;do
         red="${red}|"
     done
     red=${red:1}
+    
     for i in `seq 0 $(($todo))`;do
         rest="${rest}."
     done
+    
     [ "$red" == ""  ] && bsc__multiappend "left" "[" $incolor "black" "${green}" $okcolor "black" "${rest}]${text}" $incolor "black"
     [ "$red" != ""  ] && bsc__multiappend "left" "[" $incolor "black" "${green}" $okcolor "black" "${red}" $overcolor "black" "${rest}]${text}" $incolor "black"
 }
@@ -487,22 +488,35 @@ vumeter(){
 #   progressbar <length> <progress> <max> [color] [bgcolor]
 #
 progressbar(){
-    local done
-    local todo
-    local len
-    local progress
-    local max
-    local bar
-    local modulo
-    len=$1
-    progress=$2
-    max=$3
+    local len=$1
+    local progress=$2
+    local max=$3
+    local color=$4
+    local bgcolor=$5
 
-    done=$(( progress * len / max ))
-    todo=$(( len - done - 1 ))
-    modulo=$(( $(date +%s) % 4 ))
+    [ "$color" == "" ] && color="green"
+    [ "$bgcolor" == "" ] && bgcolor="black"
 
-    bar="[";
+    case $len in
+        *%)
+            len=${len/'%'}
+            len=$((len*bsc_cols/100))
+            len=$((len-4))
+            ;;
+        *)
+            len=$((len-4))
+            ;;
+    esac
+
+    if [ $len -lt 3 ];then
+        len=3
+    fi
+
+    local done=$(( progress * len / max ))
+    local todo=$(( len - done - 1 ))
+    local modulo=$(( $(date +%s) % 4 ))
+
+    local bar="[";
     for (( c=1; c<=done; c++ )); do
         bar="${bar}${_BLOCK}"
     done
@@ -513,8 +527,9 @@ progressbar(){
         bar="${bar} "
     done
     bar="${bar}]"
-    bsc__append "$bar" "left" $4 $5
+    bsc__append "$bar" "left" $color $bgcolor
 }
+
 append(){
     while read -r line; do
         bsc__append "$line" $2 $3 $4
@@ -546,7 +561,7 @@ bsc__multiappend(){
     local len=${#1}
     bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
 
-    params=( "$@")
+    params=( "$@" )
     [[ "${params[0]}" == "left" ]] && bsc_left=0
     unset params[0]
     params=( "${params[@]}" )
@@ -623,7 +638,7 @@ append_command(){
     while read -r line; do
         bsc__append "$line" left $2 $3
     done < <( $1 2>&1 | fold -w $((BSC_COLWIDTH-2)) -s)
-    }
+}
 
 #close the window display
 endwin(){
@@ -693,7 +708,7 @@ Layout usage:
   See examples, especially wintest.sh to see all possible usages.
 
 EOF
-    printf '%s' "$REPLY" | fold -s -w "${COLUMNS:-80}"
+printf '%s' "$REPLY" | fold -s -w "${COLUMNS:-80}"
 fi
 }
 
@@ -705,18 +720,77 @@ parse_args (){
     while [[ $# -gt 0 ]]; do
         # shellcheck disable=SC2034
         case "$1" in
-        --version)          echo "$VERSION"; exit 0 ;;
-        -c  | --crop)       BSC_TITLECROP=1; shift 1 ;;
-        -hh | --more-help)  usage 2; exit 0 ;;
-        -h  | --help)       usage; exit 0 ;;
-        -q  | --quiet)      VERBOSE=0; shift 1 ;;
-        -s  | --scroll)     BSC_MODE=scroll; shift 1 ;;
-        -t  | --time)       time=$2; shift 2 ;;
-        -V  | --verbose)    VERBOSE=2; shift 1 ;;
-        --)                 return 0 ;;
-        *)                  echo "Option $1 does not exist"; exit 1;;
+            --version)          echo "$VERSION"; exit 0 ;;
+            -c  | --crop)       BSC_TITLECROP=1; shift 1 ;;
+            -hh | --more-help)  usage 2; exit 0 ;;
+            -h  | --help)       usage; exit 0 ;;
+            -q  | --quiet)      VERBOSE=0; shift 1 ;;
+            -s  | --scroll)     BSC_MODE=scroll; shift 1 ;;
+            -t  | --time)       time=$2; shift 2 ;;
+            -V  | --verbose)    VERBOSE=2; shift 1 ;;
+            --)                 return 0 ;;
+            *)                  echo "Option $1 does not exist"; exit 1;;
         esac
     done
+}
+
+BSC_JOB=""
+
+
+## The display function (called in main loop)
+__display() {
+    # if an update function has been defined, use it. Or just sleep
+    if [ "$(type -t update)" == "function" ]; then
+        update_fn="update"
+    else
+        update_fn="sleep"
+    fi
+
+    reset_layout
+    echo -n "" > $BSC_BUFFER
+    rm -f $BSC_STDERR
+
+    if [ "$BSC_MODE" == dashboard ]; then
+        tput clear >> $BSC_BUFFER
+        tput cup 0 0 >> $BSC_BUFFER
+    fi
+
+    # hide cursor
+    tput civis >> $BSC_BUFFER 2>$BSC_STDERR
+
+    # call main function
+    main >> $BSC_BUFFER 2>$BSC_STDERR
+
+    # Go under the higest column, from under the last displayed window
+    tput cud $(( BSC_COLHGT_MAX - BSC_COLBOT )) >> "$BSC_BUFFER"
+    tput cub "$(tput cols)" >> "$BSC_BUFFER"
+
+    sigint_check
+
+    # Display the buffer
+    cat $BSC_BUFFER
+
+    [ $VERBOSE -gt 0 ] && [ -f "$BSC_STDERR" ] && cat $BSC_STDERR && rm $BSC_STDERR
+
+    # call update function
+    # TODO: be able to get the pid of the update function to kill it on 
+    #       WINCH signal
+    #       note that the update function cannot get global variables 
+    #       if we use "&", so "wait" command cannot be the solution
+    $update_fn "$time"
+    retval=$?
+    if [ $retval -eq 255 ]; then
+        clean_env
+        exit "$retval"
+    fi
+
+    sigint_check
+}
+
+__force_refresh() {
+    # we need to force a refresh of the screen
+    # TODO: find a way to kill the "update" function here
+    tput clear
 }
 
 #main loop called
@@ -726,49 +800,13 @@ main_loop (){
     bsc_term_init
     bsc_init_chars
 
-    # if an update function has been defined, use it. Or just sleep
-    if [ "$(type -t update)" == "function" ]; then
-        update_fn="update"
-    else
-        update_fn="sleep"
-    fi
-
     # Capture screen size change in dashboard mode to clean it
     if [ "$BSC_MODE" == dashboard ]; then
-        trap "tput clear" WINCH
+        trap "__force_refresh" WINCH
     fi
 
     while true; do
-        reset_layout
-        echo -n "" > $BSC_BUFFER
-        rm -f $BSC_STDERR
-
-        if [ "$BSC_MODE" == dashboard ]; then
-            tput clear >> $BSC_BUFFER
-            tput cup 0 0 >> $BSC_BUFFER
-        fi
-
-        main >> $BSC_BUFFER 2>$BSC_STDERR
-
-        # Go under the higest column, from under the last displayed window
-        tput cud $(( BSC_COLHGT_MAX - BSC_COLBOT )) >> "$BSC_BUFFER"
-        tput cub "$(tput cols)" >> "$BSC_BUFFER"
-
-        sigint_check
-
-        # Display the buffer
-        cat $BSC_BUFFER
-
-        [ $VERBOSE -gt 0 ] && [ -f "$BSC_STDERR" ] && cat $BSC_STDERR && rm $BSC_STDERR
-
-        $update_fn "$time"
-        retval=$?
-        if [ $retval -eq 255 ]; then
-                clean_env
-                exit "$retval"
-        fi
-
-        sigint_check
+        __display
     done
 }
 # Calls to this function are placed so as to avoid stdout mangling
@@ -782,6 +820,7 @@ sigint_check (){
     fi
 }
 
+# case of a not sourced script
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     parse_args $@
     usage
