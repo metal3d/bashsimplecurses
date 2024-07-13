@@ -15,6 +15,26 @@
 #support for delay loop function (instead of sleep,
 #enabling keyboard input) by Markus Mikkolainen
 
+BSC_COLLFT=0
+BSC_COLWIDTH=0
+BSC_COLWIDTH_MAX=0
+BSC_WLFT=0
+# Height are not dynamically updated
+# Only at window and endwin call
+# Height of the current window
+BSC_WNDHGT=0
+# Height of the bottom of the current window
+BSC_COLHGT=0
+# Heigh of the bottom of the current column
+BSC_COLBOT=0
+# Height of the maximum bottom ever
+BSC_COLHGT_MAX=0
+# Flags to code the lib user window placement request
+BSC_NEWWIN_TOP_REQ=0
+BSC_NEWWIN_RGT_REQ=0
+VERBOSE=0
+BSC_TITLECROP=0
+
 VERSION="dev"
 
 bsc_create_buffer(){
