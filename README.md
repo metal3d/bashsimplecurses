@@ -86,7 +86,7 @@ You can then uninstall the library file:
 
 ```bash
 sudo make uninstall
-make uninstall PREFIX=~/.loca/bin
+make uninstall PREFIX=~/.local/bin
 ```
 
 ## License
