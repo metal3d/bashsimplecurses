@@ -63,6 +63,7 @@ bsc_create_buffer(){
 #Usefull variables
 BSC_BUFFER=$(bsc_create_buffer)
 BSC_STDERR=$(bsc_create_buffer stderr)
+BSC_INPUT_BUFFER=""
 
 reset_layout() {
     BSC_COLLFT=0
@@ -85,10 +86,12 @@ reset_layout() {
 }
 
 clean_env(){
-    rm -rf $BSC_BUFFER
+    rm -rf "$BSC_BUFFER"
     reset_colors
     tput cnorm
     tput cvvis
+    stty icanon
+    [ -n "${OLD_IFS+x}" ] && IFS="$OLD_IFS"
     setterm -cursor on
 }
 #call on SIGINT and SIGKILL
@@ -115,6 +118,7 @@ bsc_term_init(){
         tput clear
     fi
     # tput civis
+    stty -icanon
 }
 
 
@@ -123,7 +127,7 @@ bsc__nl(){
     BSC_WNDHGT=$((BSC_WNDHGT+1))
     tput cud1
     tput cub "$(tput cols)"
-    [ $BSC_WLFT -gt 0 ] && tput cuf $BSC_WLFT
+    [ "$BSC_WLFT" -gt 0 ] && tput cuf "$BSC_WLFT"
     tput sc
 }
 
@@ -185,13 +189,13 @@ backtotoprow () {
 
     # Testing if layout would require non destructive scrolling
     nbrows=$(tput lines)
-    scrollback=$(( travelback -nbrows ))
+    scrollback=$(( travelback - nbrows ))
     if [ $scrollback -gt 0 ]; then
         #    tput rin $scrollback
         #    travelback=$(( travelback - scrollback ))
         echo "Warning: Current layout is exceeding terminal size. This will break window top alignment. Increase terminal height/reduce window content for proper rendering." >&2
     fi
-    [ $travelback -gt 0 ] && tput cuu $travelback
+    [ "$travelback" -gt 0 ] && tput cuu "$travelback"
 }
 
 #Append a window
@@ -203,7 +207,7 @@ function window() {
     color=$2
     bgcolor=$4
 
-    [ $VERBOSE -eq 2 ] && echo "Begin of window $title" >&2
+    [ "$VERBOSE" -eq 2 ] && echo "Begin of window $title" >&2
 
     # Manage new window position
     case "$BSC_NEWWIN_TOP_REQ$BSC_NEWWIN_RGT_REQ" in
@@ -214,9 +218,9 @@ function window() {
             # Window is requested to be displayed to the right of the last one
 
             BSC_WLFT=$(( BSC_WLFT + BSC_COLWIDTH ))
-            [ $BSC_WLFT -gt 0 ] && tput cuf $(( BSC_WLFT + BSC_COLWIDTH ))
-            backtotoprow $BSC_WNDHGT
-            BSC_COLHGT=$(( BSC_COLHGT - BSC_WNDHGT))
+            [ $BSC_WLFT -gt 0 ] && tput cuf $(( BSC_WLFT ))
+            backtotoprow "$BSC_WNDHGT"
+            BSC_COLHGT=$(( BSC_COLHGT - BSC_WNDHGT ))
             ;;
         "10" )
             # Window is requested to be displayed overwriting the ones above (??!??)
@@ -226,7 +230,7 @@ function window() {
             ;;
         "11" )
             # Window is requested to be displayed in a new column starting from top
-            backtotoprow $BSC_COLHGT
+            backtotoprow "$BSC_COLHGT"
 
             BSC_COLLFT=$(( BSC_COLLFT + BSC_COLWIDTH_MAX ))
             BSC_WLFT=$BSC_COLLFT
@@ -246,46 +250,47 @@ function window() {
     BSC_NEWWIN_RGT_REQ=0
     BSC_WNDHGT=0
 
-    bsc_cols=$(tput cols)
-    case $3  in
+    BSC_COLS=$(tput cols)
+    case $3 in
         "" )
-            # No witdh given
+            # No width given
             ;;
         *% )
             w=${3/'%'}
-            bsc_cols=$((w*bsc_cols/100))
+            BSC_COLS=$((w*BSC_COLS/100))
             ;;
         * )
-            bsc_cols=$3
+            BSC_COLS=$3
             ;;
     esac
 
-    if [ "$bsc_cols" -lt 3 ]; then
-        echo "Column width of window \"$title\" is too narrow to render (sz=$bsc_cols)." >&2
+    if [ "$BSC_COLS" -lt 3 ]; then
+        echo "Column width of window \"$title\" is too narrow to render (sz=$BSC_COLS)." >&2
         exit 1;
     fi
 
-    BSC_COLWIDTH=$bsc_cols
-    [ $BSC_COLWIDTH -gt $BSC_COLWIDTH_MAX ] && BSC_COLWIDTH_MAX=$BSC_COLWIDTH
+    BSC_COLWIDTH=$BSC_COLS
+    [ "$BSC_COLWIDTH" -gt "$BSC_COLWIDTH_MAX" ] && BSC_COLWIDTH_MAX=$BSC_COLWIDTH
 
     # Create an empty line for this window
     BSC_BLANKLINE=$(head -c "$BSC_COLWIDTH" /dev/zero | tr '\0' ' ')
     BSC_LINEBODY=${BSC_BLANKLINE:2}
-    contentLen=${#BSC_LINEBODY}
+    local content_len
+    content_len=${#BSC_LINEBODY}
     BSC_LINEBODY=${BSC_LINEBODY// /$_HLINE}
 
     local len=${#title}
 
-    if [ $BSC_TITLECROP -eq 1 ] && [ "$len" -gt "$contentLen" ]; then
-        title="${title:0:$contentLen}"
+    if [ "$BSC_TITLECROP" -eq 1 ] && [ "$len" -gt "$content_len" ]; then
+        title="${title:0:$content_len}"
         len=${#title}
     fi
 
-    bsc_left=$(( (bsc_cols - len)/2 -1 ))
+    bsc_left=$(( (BSC_COLS - len)/2 - 1 ))
 
     # Init top left window corner
     tput cub "$(tput cols)"
-    [ $BSC_WLFT -gt 0 ] && tput cuf $BSC_WLFT
+    [ "$BSC_WLFT" -gt 0 ] && tput cuf "$BSC_WLFT"
     tput sc
 
     #draw upper line
@@ -520,7 +525,7 @@ progressbar(){
     case $len in
         *%)
             len=${len/'%'}
-            len=$((len*bsc_cols/100))
+            len=$((len*BSC_COLS/100))
             len=$((len-4))
             ;;
         *)
@@ -547,12 +552,12 @@ progressbar(){
         bar="${bar} "
     done
     bar="${bar}]"
-    bsc__append "$bar" "left" $color $bgcolor
+    bsc__append "$bar" "left" "$color" "$bgcolor"
 }
 
 append(){
     while read -r line; do
-        bsc__append "$line" $2 $3 $4
+        bsc__append "$line" "$2" "$3" "$4"
     done < <(echo -e "$1" | fold -w $((BSC_COLWIDTH-2)) -s)
 }
 #
@@ -605,18 +610,29 @@ bsc__multiappend(){
 #   bsc__append <text> [centering] [color] [bgcolor]
 #
 bsc__append(){
+    local text
+    text=$1
+    local centering
+    centering=$2
+    local color
+    color=$3
+    local bgcolor
+    bgcolor=$4
     clean_line
     tput sc
     echo -ne $_VLINE
-    local len=${#1}
-    bsc_left=$(( (BSC_COLWIDTH - len)/2 - 1 ))
-
-    [[ "$2" == "left" ]] && bsc_left=0
-
-    [ $bsc_left -gt 0 ] && tput cuf $bsc_left
-    setcolor $3
-    setbgcolor $4
-    echo -ne "$1"
+    local len=${#text}
+    local cursor_right_shift
+    case "$centering" in
+        left)       cursor_right_shift=0 ;;
+        right)      cursor_right_shift=$(( BSC_COLWIDTH - 2 - len )) ;;
+        center | *) cursor_right_shift=$(( (BSC_COLWIDTH - len)/2 - 1 )) ;;
+    esac
+    [ "$cursor_right_shift" -gt 0 ] && tput cuf "$cursor_right_shift"
+    [ "$VERBOSE" -eq 2 ] && echo "$bsc_left" >&2
+    setcolor "$color"
+    setbgcolor "$bgcolor"
+    echo -ne "$text"
     reset_colors
     tput rc
     tput cuf $((BSC_COLWIDTH-1))
@@ -736,6 +752,7 @@ parse_args (){
     BSC_MODE=dashboard
     VERBOSE=1
     BSC_TITLECROP=0
+    ENABLE_INPUT=0
     time=1
     while [[ $# -gt 0 ]]; do
         # shellcheck disable=SC2034
@@ -748,6 +765,7 @@ parse_args (){
             -s  | --scroll)     BSC_MODE=scroll; shift 1 ;;
             -t  | --time)       time=$2; shift 2 ;;
             -V  | --verbose)    VERBOSE=2; shift 1 ;;
+            -i  | --enable-input) ENABLE_INPUT=1; shift 1 ;;
             --)                 return 0 ;;
             *)                  echo "Option $1 does not exist"; exit 1;;
         esac
@@ -756,6 +774,24 @@ parse_args (){
 
 BSC_JOB=""
 
+
+__get_input() {
+    local accum
+    accum=""
+    local char
+    OLD_IFS=$IFS
+    IFS=""
+    while :
+    do
+        if ! read -t 0
+        then
+            break
+        fi
+        read -n 1 char && accum+=$char
+    done
+    IFS=$OLD_IFS
+    BSC_INPUT_BUFFER+=$accum
+}
 
 ## The display function (called in main loop)
 __display() {
@@ -767,19 +803,19 @@ __display() {
     fi
 
     reset_layout
-    echo -n "" > $BSC_BUFFER
-    rm -f $BSC_STDERR
+    echo -n "" > "$BSC_BUFFER"
+    rm -f "$BSC_STDERR"
 
     if [ "$BSC_MODE" == dashboard ]; then
-        tput clear >> $BSC_BUFFER
-        tput cup 0 0 >> $BSC_BUFFER
+        tput clear >> "$BSC_BUFFER"
+        tput cup 0 0 >> "$BSC_BUFFER"
     fi
 
     # hide cursor
-    tput civis >> $BSC_BUFFER 2>$BSC_STDERR
+    tput civis >> "$BSC_BUFFER" 2>"$BSC_STDERR"
 
     # call main function
-    main >> $BSC_BUFFER 2>$BSC_STDERR
+    main >> "$BSC_BUFFER" 2>"$BSC_STDERR"
 
     # Go under the higest column, from under the last displayed window
     tput cud $(( BSC_COLHGT_MAX - BSC_COLBOT )) >> "$BSC_BUFFER"
@@ -788,17 +824,27 @@ __display() {
     sigint_check
 
     # Display the buffer
-    cat $BSC_BUFFER
+    cat "$BSC_BUFFER"
 
-    [ $VERBOSE -gt 0 ] && [ -f "$BSC_STDERR" ] && cat $BSC_STDERR && rm $BSC_STDERR
+    [ "$ENABLE_INPUT" == 1 ] && __get_input
+
+    [ "$VERBOSE" -gt 0 ] && [ -f "$BSC_STDERR" ] && cat "$BSC_STDERR" && rm "$BSC_STDERR"
+    [ "$ENABLE_INPUT" == 1 ] && [ "$VERBOSE" -gt 0 ] && echo -n "input:$BSC_INPUT_BUFFER"
 
     # call update function
     # TODO: be able to get the pid of the update function to kill it on 
     #       WINCH signal
     #       note that the update function cannot get global variables 
     #       if we use "&", so "wait" command cannot be the solution
-    $update_fn "$time"
-    retval=$?
+    if [ "$ENABLE_INPUT" == 1 ]; then
+        unset RETURN_VALUE
+        $update_fn "$time" "$BSC_INPUT_BUFFER"
+        retval=$?
+        [ -n "${RETURN_VALUE+x}" ] && BSC_INPUT_BUFFER=$RETURN_VALUE
+    else
+        $update_fn "$time"
+        retval=$?
+    fi
     if [ $retval -eq 255 ]; then
         clean_env
         exit "$retval"
@@ -815,7 +861,7 @@ __force_refresh() {
 
 #main loop called
 main_loop (){
-    parse_args $@
+    parse_args "$@"
 
     bsc_term_init
     bsc_init_chars
@@ -824,7 +870,7 @@ main_loop (){
     if [ "$BSC_MODE" == dashboard ]; then
         trap "__force_refresh" WINCH
     fi
-
+    
     while true; do
         __display
     done
@@ -833,7 +879,7 @@ main_loop (){
 sigint_check (){
     if [ $BSC_SIGINT -eq 1 ]; then
         clean_env
-        [ -f "$BSC_STDERR" ] && cat $BSC_STDERR && rm $BSC_STDERR
+        [ -f "$BSC_STDERR" ] && cat "$BSC_STDERR" && rm "$BSC_STDERR"
         # https://mywiki.wooledge.org/SignalTrap
         trap - INT
         kill -s INT "$$"
@@ -842,7 +888,7 @@ sigint_check (){
 
 # case of a not sourced script
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    parse_args $@
+    parse_args "$@"
     usage
     exit 1
 fi
